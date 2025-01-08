@@ -1,14 +1,17 @@
 import { gql } from "graphql-request";
 
 export const GET_PRODUCTS = gql`
-  query GetProducts($id: Int!) {
-    products(where: { product_id: { _eq: $id } }) {
+  query GetProducts {
+    products(where: { product_id: {} }) {
       category_id
       created_at
       description
       image_url
       stock_quantity
       updated_at
+      name
+      price
+      product_id
     }
   }
 `;
