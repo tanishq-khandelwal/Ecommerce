@@ -4,13 +4,11 @@ import { GET_PRODUCTS, CREATE_PRODUCT } from "../queries/product.queries.js";
 
 export const fetchProducts = async (req, res) => {
   try {
-    const data = await hasuraClient.request(GET_PRODUCTS);
+    const response = await hasuraClient.request(GET_PRODUCTS);
+    const p=response.products;
+    res.status(200).json(p)
 
-    res.status(200).json({
-      success:true,
-      message: "Product data fetched Successfully",
-      data,
-    });
+    console.log(p);
   } catch (err) {
     console.error("An Error Occured", err);
 

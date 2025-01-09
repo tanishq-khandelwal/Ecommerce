@@ -4,7 +4,7 @@ import { addProducts, fetchProducts } from "../controllers/products.controller.j
 const router=Router();
 
 
-router.get('/products',fetchProducts);
+router.post('/products',fetchProducts);
 router.post('/products/add',addProducts);
 
 export default router;
