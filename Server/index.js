@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import productRoutes from "./routes/products.routes.js";
+import userRoutes from "./routes/users.routes.js"; 
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/api/v1/view", productRoutes);
+app.use('/api/v1/user',userRoutes);
 
 app.get("/ping", (_req, res) => {
   res.send("Pong");

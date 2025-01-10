@@ -1,6 +1,7 @@
 import { useState } from "react";
 import heartsvg from "../assets/hearsvg.svg";
 import cartsvg from "../assets/cartsvg.svg";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,9 +16,9 @@ const Navbar = () => {
     <nav className="bg-gray-800 p-4">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-white font-bold text-xl">
-          <a href="#">eStore</a>
-        </div>
+          <div className="text-white font-bold text-xl">
+            <a href="/">eStore</a>
+          </div>
 
         {/* Search Bar */}
         <div className="md:flex flex-1 justify-center">
@@ -140,9 +141,11 @@ const Navbar = () => {
         </div> */}
 
         <div className="flex items-center space-x-4 justify-end ml-8">
+          <Link to={'/login'}>
           <button className="text-lg px-4 py-2 border rounded-full hover:bg-gray-200 text-white hover:text-black">
             Login
           </button>
+          </Link>
           <button className="text-lg px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
             Sign Up
           </button>

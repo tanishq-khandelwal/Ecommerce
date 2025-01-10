@@ -25,9 +25,9 @@ function Homepage() {
           {/* Categories Section Ends */}
 
           {/* Product Section Starts */}
-          <diV>
+          <div>
             <ProductSection />
-          </diV>
+          </div>
           {/* Product Section Ends */}
 
         </div>
