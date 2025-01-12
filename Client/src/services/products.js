@@ -10,7 +10,10 @@ export const ProductsAPI = createApi({
     baseUrl: url,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
-      headers.set("x-hasura-admin-secret", "XQFyYZkJ48TUd3LeJ3YDzVfYoURp5DEKcy1QDubTMhJQtw01vjjnlUjj5Vzsx55J"); 
+      headers.set(
+        "x-hasura-admin-secret",
+        "XQFyYZkJ48TUd3LeJ3YDzVfYoURp5DEKcy1QDubTMhJQtw01vjjnlUjj5Vzsx55J"
+      );
       return headers;
     },
   }),
@@ -20,22 +23,23 @@ export const ProductsAPI = createApi({
         method: "POST",
         body: JSON.stringify({
           query: `
-            query GetProducts {
-              products {
-                product_id
-                name
-                description
-                price
-                stock_quantity
-                image_url
-                created_at
-                updated_at
-              }
-            }
+           query GetProducts {
+              products(where: { product_id: {} }) {
+              category_id
+              created_at
+              description
+              image_url
+              stock_quantity
+              updated_at
+              name
+              price
+              product_id
+    }
+  }
           `,
         }),
       }),
-      transformResponse: (response) => response.data.products, // Optional: Transform response if needed
+      transformResponse: (response) => response.data.products,
     }),
   }),
 });

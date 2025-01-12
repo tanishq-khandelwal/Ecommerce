@@ -67,12 +67,11 @@ const Login = ({ onLogin }) => {
         </form>
 
         <div className="flex  py-4">
-  <span className="mr-2">Don't have an account?</span>
-  <a href="/signup" className="text-blue-600 hover:underline">
-    Create Account
-  </a>
-</div>
-
+          <span className="mr-2">Don't have an account?</span>
+          <a href="/signup" className="text-blue-600 hover:underline">
+            Create Account
+          </a>
+        </div>
       </div>
     </div>
   );

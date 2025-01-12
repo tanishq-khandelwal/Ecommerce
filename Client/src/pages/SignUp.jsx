@@ -137,10 +137,10 @@ const Signup = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="mb-4">
+          <div className="mb-4 flex justify-center items-center">
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-auto px-8 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={isLoading}
             >
               {isLoading ? 'Signing Up...' : 'Sign Up'}
@@ -153,6 +153,12 @@ const Signup = () => {
           {/* Success Message */}
           {data && <div className="text-green-500 text-sm">Registration Successfull</div>}
         </form>
+        <div className="flex">
+          <span className="mr-2">Already have an Account ?</span>
+          <a href="/login" className="text-blue-600 hover:underline">
+            Log In
+          </a>
+        </div>
       </div>
     </div>
   );
