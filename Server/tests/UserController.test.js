@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { hasuraClient } from "../config/hasuraClient.js";
-import { RegisterUser } from "../controllers/user.contollers.js";
+import { RegisterUser, loginUser } from "../controllers/user.contollers.js";
 
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
@@ -106,5 +106,82 @@ describe("RegisterUser API", () => {
     expect(res.json).toHaveBeenCalledWith({
       message: "Error while registering the user",
     });
+  });
+});
+
+describe("loginUser API", () => {
+  let req, res;
+
+  beforeEach(() => {
+    req = {
+      body: {
+        email: "test@example.com",
+        password: "testpassword",
+      },
+    };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+      cookie: jest.fn(),
+    };
+  });
+
+  it("should return 400 if email or password is missing", async () => {
+    req.body = {}; // Empty request body
+
+    await loginUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: "All Fields are Required" });
+  });
+
+  it("should return 404 if no user is found for the provided email", async () => {
+    hasuraClient.request.mockResolvedValueOnce({ users: [] });
+
+    await loginUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "User not found" });
+  });
+
+  it("should return 404 if password is not found for the user", async () => {
+    hasuraClient.request.mockResolvedValueOnce({ users: [{ password: null }] });
+
+    await loginUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ message: "Password not found" });
+  });
+
+  it("should return 400 if password is incorrect", async () => {
+    hasuraClient.request.mockResolvedValueOnce({ users: [{ password: "hashedpassword" }] });
+    bcrypt.compareSync.mockReturnValueOnce(false); // Simulate incorrect password
+
+    await loginUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: "Incorrect password" });
+  });
+
+  it("should return 200 and set cookie if login is successful", async () => {
+    hasuraClient.request.mockResolvedValueOnce({ users: [{ user_id: 1, password: "hashedpassword" }] });
+    bcrypt.compareSync.mockReturnValueOnce(true); // Simulate correct password
+    jwt.sign.mockReturnValueOnce("mocked_jwt_token"); // Mock JWT token
+
+    await loginUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ message: "Login successful" });
+    expect(res.cookie).toHaveBeenCalledWith("auth_token", "mocked_jwt_token", expect.any(Object));
+  });
+
+  it("should handle unexpected errors gracefully", async () => {
+    const error = new Error("Database error");
+    hasuraClient.request.mockRejectedValueOnce(error);
+
+    await loginUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: "Internal server error" });
   });
 });
