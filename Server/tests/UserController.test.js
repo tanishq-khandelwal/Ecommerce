@@ -7,6 +7,9 @@ jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
 jest.mock("../config/hasuraClient.js");
 
+
+//  Testing for Register User API
+
 describe("RegisterUser API", () => {
   let req, res;
 
@@ -108,6 +111,9 @@ describe("RegisterUser API", () => {
     });
   });
 });
+
+
+// Testing for Login User API
 
 describe("loginUser API", () => {
   let req, res;

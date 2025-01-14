@@ -4,10 +4,10 @@ import { hasuraClient } from "../config/hasuraClient.js";
 import { CREATE_USER, LOGIN } from "../queries/user.queries.js";
 
 const cookieOptions = {
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  secure: true,
+  sameSite: 'None',
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  httpOnly: true,
+  httpOnly: false,
 };
 
 const generateJWTToken = (userId, email) => {

@@ -1,15 +1,27 @@
 import React, { useState } from "react";
+import { useLoginMutation } from "../redux/slices/authSlice";
 
-const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [login, { isLoading, isError, error }] = useLoginMutation();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Perform validation or API call here
-    const loginData = { email, password };
-    onLogin(loginData); // Pass data to parent or handle login logic
+    try {
+      const response = await login({ email, password }).unwrap();
+      console.log('Login successful:', response);
+
+      // Save token and handle post-login actions
+      // localStorage.setItem('auth_token', response.token);
+      alert('Login successful!');
+
+      console.log("Cookie is :",document.cookie); 
+    } catch (err) {
+      console.error('Login failed:', err);
+      alert(err?.data?.message || 'Login failed. Please try again.');
+    }
   };
 
   return (
