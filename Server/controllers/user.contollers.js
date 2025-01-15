@@ -12,7 +12,7 @@ const cookieOptions = {
 
 const generateJWTToken = (userId, email) => {
   const payload = { userId, email };
-  const secret = process.env.JWT_SECRET; // Store your secret securely in environment variables.
+  const secret = process.env.JWT_SECRET; 
   const options = { expiresIn: "7d" };
   return jwt.sign(payload, secret, options);
 };
@@ -97,6 +97,7 @@ export const loginUser = async (req, res) => {
       console.log('No user found with this email');
       return res.status(404).json({
         message: "User not found",
+        
       });
     }
 
@@ -119,6 +120,7 @@ export const loginUser = async (req, res) => {
 
       return res.status(200).json({
         message: "Login successful",
+        data:response
       });
     } else {
       console.log('Wrong Password');

@@ -16,6 +16,12 @@ export const LOGIN = gql`
       first_name
       last_name
       user_id
+      phone
+      role
+      carts {
+        cart_id
+        quantity
+      }
     }
   }
 `;
