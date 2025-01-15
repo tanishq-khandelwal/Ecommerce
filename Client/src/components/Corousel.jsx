@@ -6,11 +6,10 @@ import courouse4 from '../assets/3.jpg';
 // import courouse5 from '../assets/corousel1.jpg';
 
 const images = [
-  { id: 1, src: '', alt: 'Slide 1' },
-  { id: 2, src: '', alt: 'Slide 2' },
-  { id: 3, src: '', alt: 'Slide 3' },
-  { id: 4, src: '', alt: 'Slide 4' },
-  { id: 5, src: '', alt: 'Slide 5' },
+  { id: 1, src: 'https://images-eu.ssl-images-amazon.com/images/G/31/img24/Wireless/akull/JanART25/PEA_Event/PC_Hero_3000x1200_Asin._CB552651757_.jpg', alt: 'Slide 1' },
+  { id: 2, src: 'https://images-eu.ssl-images-amazon.com/images/G/31/Symbol/2025/JanART/GW/Hero/event/unrec/2-1._CB552931194_.jpg', alt: 'Slide 2' },
+  { id: 3, src: 'https://images-eu.ssl-images-amazon.com/images/G/31/img22/WLA/2025/JanART/Uber/Gateway/Event/D197029535__WLA_JanART_GatewayPC_Hero_3000x1200_Lifestyle_4._CB552673282_.jpg', alt: 'Slide 3' },
+
 ];
 
 function Carousel() {

@@ -17,7 +17,7 @@ const ProductSection = () => {
             className="bg-white p-1 border rounded-lg shadow-lg hover:shadow-2xl transition"
           >
             <img
-              src="https://via.placeholder.com/300x200"
+              src="https://images-eu.ssl-images-amazon.com/images/G/31/img21/Camera/Trueview/PC_CC_379x304_CEPC._SY304_CB552821024_.jpg"
               alt="product"
               className="w-full h-60 object-cover rounded-lg mb-4"
             />
