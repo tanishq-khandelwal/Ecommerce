@@ -170,14 +170,36 @@ describe("loginUser API", () => {
   });
 
   it("should return 200 and set cookie if login is successful", async () => {
-    hasuraClient.request.mockResolvedValueOnce({ users: [{ user_id: 1, password: "hashedpassword" }] });
+    hasuraClient.request.mockResolvedValueOnce({
+      users: [
+        {
+          user_id: 1,
+          password: "hashedpassword",
+          first_name: "Tanishq",
+          last_name: "Khandelwal",
+          phone: "9011616611",
+          role: "CUSTOMER",
+          carts: [{ cart_id: 1, quantity: 2 }],
+        },
+      ],
+    });
     bcrypt.compareSync.mockReturnValueOnce(true); // Simulate correct password
     jwt.sign.mockReturnValueOnce("mocked_jwt_token"); // Mock JWT token
 
     await loginUser(req, res);
 
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ message: "Login successful" });
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Login successful",
+      data: {
+        user_id: 1,
+        first_name: "Tanishq",
+        last_name: "Khandelwal",
+        phone: "9011616611",
+        role: "CUSTOMER",
+        carts: [{ cart_id: 1, quantity: 2 }],
+      },
+    });
     expect(res.cookie).toHaveBeenCalledWith("auth_token", "mocked_jwt_token", expect.any(Object));
   });
 

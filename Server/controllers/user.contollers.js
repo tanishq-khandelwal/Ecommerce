@@ -118,9 +118,13 @@ export const loginUser = async (req, res) => {
       const token = generateJWTToken(response.users[0].user_id, email);
       res.cookie("auth_token", token, cookieOptions);
 
+
+      const userwithoutpassword={...response.users[0]};
+      delete userwithoutpassword.password;
+
       return res.status(200).json({
         message: "Login successful",
-        data:response
+        data:userwithoutpassword
       });
     } else {
       console.log('Wrong Password');

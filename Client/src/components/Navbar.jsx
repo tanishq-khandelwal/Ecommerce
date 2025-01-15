@@ -2,11 +2,15 @@ import { useState } from "react";
 import heartsvg from "../assets/hearsvg.svg";
 import cartsvg from "../assets/cartsvg.svg";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import UserDropdown from "./userDropdown";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(1); // Example count
   const [likedCount, setLikedCount] = useState(2); // Example count
+
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -16,9 +20,9 @@ const Navbar = () => {
     <nav className="bg-gray-800 p-4">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center">
         {/* Logo */}
-          <div className="text-white font-bold text-xl">
-            <a href="/">eStore</a>
-          </div>
+        <div className="text-white font-bold text-xl">
+          <a href="/">eStore</a>
+        </div>
 
         {/* Search Bar */}
         <div className="md:flex flex-1 justify-center">
@@ -87,72 +91,25 @@ const Navbar = () => {
           </span>
         </button>
 
-        {/* Avatar Button */}
-        {/* <div>
+        {isLoggedIn ? (
           <div>
-            <button
-              type="button"
-              className="w-auto border border-white rounded-2xl flex  ml-10"
-            >
-              <div className="flex justify-center items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100"
-                  height="100"
-                  viewBox="0 0 100 100"
-                  className="rounded-full h-[30px] w-[40px] "
-                >
-                  <circle cx="50" cy="50" r="50" fill="#4A90E2" />
-                  <text
-                    x="50%"
-                    y="50%"
-                    fill="white"
-                    fontSize="40"
-                    textAnchor="middle"
-                    alignmentBaseline="middle"
-                    fontFamily="Arial, sans-serif"
-                  >
-                    A
-                  </text>
-                </svg>
-              </div>
-              <div className="ml-2 mr-2 flex justify-center items-center">
-                <span className="font-semibold text-white flex items-center justify-center">
-                  Tanishq Khandelwal
-                  <div className="ml-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 100 100"
-                    >
-                      <path
-                        d="M20,30 L50,70 L80,30"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="6"
-                      />
-                    </svg>
-                  </div>
-                </span>
-              </div>
-            </button>
+            <UserDropdown/>
           </div>
-        </div> */}
+        ) : (
+          <div className="flex items-center space-x-4 justify-end ml-8">
+            <Link to={"/login"}>
+              <button className="text-lg px-4 py-2 border rounded-full hover:bg-gray-200 text-white hover:text-black">
+                Login
+              </button>
+            </Link>
 
-        <div className="flex items-center space-x-4 justify-end ml-8">
-          <Link to={'/login'}>
-          <button className="text-lg px-4 py-2 border rounded-full hover:bg-gray-200 text-white hover:text-black">
-            Login
-          </button>
-          </Link>
-
-          <Link to={'/signup'}>
-          <button className="text-lg px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
-            Sign Up
-          </button>
-          </Link>
-        </div>
+            <Link to={"/signup"}>
+              <button className="text-lg px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
+                Sign Up
+              </button>
+            </Link>
+          </div>
+        )}
 
         {/* Burger Menu (visible on mobile) */}
         {/* <div className="md:hidden flex items-center">

@@ -23,21 +23,26 @@ export const { useLoginMutation } = authApi;
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    isLoggedIn: false,
-    user: null,
+    isLoggedIn: localStorage.getItem("isLoggedIn") === "true", // Check localStorage for login state
+    user: localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null, // Retrieve user data from localStorage if available
   },
   reducers: {
     setCredentials: (state, action) => {
       const { user } = action.payload;
+      localStorage.setItem("isLoggedIn", true);
+      localStorage.setItem("user", JSON.stringify(user));
       state.isLoggedIn = true;
       state.user = user;
     },
     logout: (state) => {
-        state.isLoggedIn = false, 
-        user = null;
+      state.isLoggedIn = false,
+      state.user = null,
+      localStorage.clear();
     },
   },
 });
 
-export const { setCredentials } = authSlice.actions;
+export const { setCredentials,logout } = authSlice.actions;
 export const authReducer = authSlice.reducer;
