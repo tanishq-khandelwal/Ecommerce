@@ -139,3 +139,18 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+
+export const logoutUser = async (_req, res, _next) => {
+  res.cookie("auth_token", null, {
+    secure: true,
+    maxAge: 0,
+    httpOnly: true,
+  });
+
+
+  res.status(200).json({
+    success: true,
+    message: "User logged out successfully",
+  });
+};

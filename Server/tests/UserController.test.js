@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { hasuraClient } from "../config/hasuraClient.js";
-import { RegisterUser, loginUser } from "../controllers/user.contollers.js";
+import { RegisterUser, loginUser,logoutUser } from "../controllers/user.contollers.js";
 
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
@@ -97,6 +97,26 @@ describe("RegisterUser API", () => {
       message: "Email already exists. Please use a different email.",
     });
   });
+
+
+// Testing for Logout user API
+
+  it ("should return 200 if User Logged Out Successfully",async()=>{
+
+    await logoutUser(req,res);
+
+    
+  expect(res.cookie).toHaveBeenCalledWith("auth_token", null, {
+    secure: true,
+    maxAge: 0,
+    httpOnly: true,
+  });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+        "success": true,
+        "message": "User logged out successfully"
+    })
+  })
 
   it("should return 500 if an error occurs during registration", async () => {
     const error = new Error("Some error");

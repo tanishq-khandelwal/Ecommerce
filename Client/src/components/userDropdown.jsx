@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import {useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import avatar from "../assets/avatar.svg"
-import {logout} from "../redux/slices/authSlice.js"
+import {logout, useLogoutMutation} from "../redux/slices/authSlice.js"
+import toast from "react-hot-toast";
 // import { useDispatch } from "react-redux";
 
 
 
 const UserDropdown = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [logoutCookie, { isLoading, isError, error }] = useLogoutMutation();
   const res =  localStorage.getItem("user");
   const user = res ? JSON.parse(res).data: null; 
   const dispatch = useDispatch();
@@ -18,6 +20,8 @@ const UserDropdown = () => {
 //   console.log(res)
   const handleLogout = () => {
     dispatch(logout());
+    logoutCookie();
+    toast.success("User Logged Out Successfully");
     navigate("/login");
   };
 

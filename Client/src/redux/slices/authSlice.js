@@ -5,7 +5,7 @@ export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/api/v1/user",
-    credentials: "include", // Move this inside fetchBaseQuery
+    credentials: "include", 
   }),
   endpoints: (builder) => ({
     login: builder.mutation({
@@ -15,18 +15,25 @@ export const authApi = createApi({
         body: loginData,
       }),
     }),
+
+    logout:builder.mutation({
+        query:()=>({
+            url:"logout",
+            method:"POST",
+        })
+    })
   }),
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation,useLogoutMutation } = authApi;
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    isLoggedIn: localStorage.getItem("isLoggedIn") === "true", // Check localStorage for login state
+    isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
     user: localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
-      : null, // Retrieve user data from localStorage if available
+      : null,
   },
   reducers: {
     setCredentials: (state, action) => {
