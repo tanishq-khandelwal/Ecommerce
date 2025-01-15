@@ -31,7 +31,7 @@ const Login = () => {
       toast.success("Login Successful");
       navigate('/');
 
-      console.log("Cookie is :", document.cookie);
+      // console.log("Cookie is :", document.cookie);
     } catch (err) {
       console.error("Login failed:", err);
       // alert(err?.data?.message || "Login failed. Please try again.");

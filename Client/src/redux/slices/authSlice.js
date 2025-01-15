@@ -21,11 +21,19 @@ export const authApi = createApi({
             url:"logout",
             method:"POST",
         })
+    }),
+
+    signup:builder.mutation({
+      query:(signupData)=>({
+        url:"register",
+        method:"POST",
+        body:signupData
+      })
     })
   }),
 });
 
-export const { useLoginMutation,useLogoutMutation } = authApi;
+export const { useLoginMutation,useLogoutMutation,useSignupMutation } = authApi;
 
 const authSlice = createSlice({
   name: "auth",
