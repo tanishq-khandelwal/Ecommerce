@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { ProductsAPI } from "../services/products";
 import { UsersAPI } from "../services/users";
 import { authApi, authReducer } from "./slices/authSlice";
+import { CartAPI } from "../services/cart";
 
 const store = configureStore({
   reducer: {
@@ -10,9 +11,10 @@ const store = configureStore({
     [ProductsAPI.reducerPath]: ProductsAPI.reducer,
     [UsersAPI.reducerPath]:UsersAPI.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [CartAPI.reducerPath]:CartAPI.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(ProductsAPI.middleware).concat(UsersAPI.middleware).concat(authApi.middleware),
+    getDefaultMiddleware().concat(ProductsAPI.middleware).concat(UsersAPI.middleware).concat(authApi.middleware).concat(CartAPI.middleware),
 });
 
 export default store;

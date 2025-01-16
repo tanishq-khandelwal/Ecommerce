@@ -1,19 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import heartsvg from "../assets/hearsvg.svg";
 import cartsvg from "../assets/cartsvg.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserDropdown from "./userDropdown";
 
 const Navbar = () => {
 
-  const cartNo= useSelector((state)=>state?.auth?.user?.data?.carts);
-  const cartCnt=cartNo?.length;
+  const Navigate=useNavigate();
+  const cartNo = useSelector((state) => state?.auth?.user?.data?.carts);
+  const cartCnt = cartNo?.length;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(cartCnt); // Example count
   const [likedCount, setLikedCount] = useState(2); // Example count
-  const [notificationCount,setNotificationCount]=useState(0)
+  const [notificationCount, setNotificationCount] = useState(0);
   const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+  useEffect(() => {
+    setCartCount(cartCnt);
+  }, [cartCnt]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -39,7 +44,7 @@ const Navbar = () => {
         {/* Notification Button */}
         <button
           type="button"
-          className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+          className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none "
         >
           <span className="absolute -inset-1.5"></span>
           <span className="sr-only">View Notification</span>
@@ -50,7 +55,6 @@ const Navbar = () => {
             strokeWidth="1.5"
             stroke="currentColor"
             aria-hidden="true"
-            data-slot="icon"
           >
             <path
               strokeLinecap="round"
@@ -68,11 +72,11 @@ const Navbar = () => {
         {/* Liked Button */}
         <button
           type="button"
-          className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 ml-4"
+          className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white  ml-4"
+          aria-label="View Liked Items"
         >
           <span className="absolute -inset-1.5"></span>
-          <span className="sr-only">View Liked Items</span>
-          <img className="h-5 w-5 " src={heartsvg} />
+          <img className="h-5 w-5 " src={heartsvg} alt="Liked Items" />
           {likedCount > 0 && (
             <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
               {likedCount}
@@ -83,35 +87,37 @@ const Navbar = () => {
         {/* Cart Button */}
         <button
           type="button"
-          className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 ml-4"
+          className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white ml-4"
+          aria-label="View Cart Items"
+
+          onClick={()=>{
+            Navigate('/cart')
+          }}
         >
           <span className="absolute -inset-1.5"></span>
-          <span className="sr-only">View CartItems</span>
-          <img className="h-7 w-6 " src={cartsvg} />
-
-
-
-            {cartCount>0 && (
-                        <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                          {cartCount}
-                          </span>
-            )}
-            
+          
+            <img className="h-7 w-6" src={cartsvg} alt="Cart" />
+        
+          {cartCount > 0 && (
+            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
         </button>
 
         {isLoggedIn ? (
           <div>
-            <UserDropdown/>
+            <UserDropdown />
           </div>
         ) : (
           <div className="flex items-center space-x-4 justify-end ml-8">
-            <Link to={"/login"}>
+            <Link to="/login">
               <button className="text-lg px-4 py-2 border rounded-full hover:bg-gray-200 text-white hover:text-black">
                 Login
               </button>
             </Link>
 
-            <Link to={"/signup"}>
+            <Link to="/signup">
               <button className="text-lg px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
                 Sign Up
               </button>

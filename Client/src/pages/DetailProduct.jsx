@@ -191,7 +191,7 @@ const DetailProduct = () => {
           </div>
         ) : (
           <p className="text-center text-lg text-gray-500">
-            No product details found.
+            
           </p>
         )}
       </div>
