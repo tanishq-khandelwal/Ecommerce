@@ -22,17 +22,17 @@ const HeroSection = () => {
       className="relative bg-cover bg-center h-[500px]"
       style={{ backgroundImage: `url(${images[currentImageIndex]})`,
       backgroundSize: "cover", // Ensure the image covers the area
-      backgroundPosition: "top 10% center", 
+      backgroundPosition: "top 15% center", 
       transition: "background-image 1s ease-in-out",}}
     >
       <div className="absolute inset-0 "></div>
-      <div className="relative z-10 text-left text-white py-44 ml-6">
+      <div className="relative z-10 text-left text-[#3934a1b7] py-44 ml-6">
         <h1 className="text-6xl font-bold mb-4">
           <span className="block font-sans">New Season</span>
           <span className="block font-sans">Arrivals</span>
         </h1>
 
-        <p className="text-xl mb-6 font-sans">
+        <p className="text-xl mb-6 font-sans text-[#0000008a]">
           Check out this season's latest trends and styles with up to 40% off on
           selected items.
         </p>

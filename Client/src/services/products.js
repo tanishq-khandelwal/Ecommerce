@@ -18,30 +18,57 @@ export const ProductsAPI = createApi({
     },
   }),
   endpoints: (builder) => ({
+    // Fetch all products
     fetchProducts: builder.query({
       query: () => ({
         method: "POST",
         body: JSON.stringify({
           query: `
-           query GetProducts {
+            query GetProducts {
               products(where: { product_id: {} }) {
-              category_id
-              created_at
-              description
-              image_url
-              stock_quantity
-              updated_at
-              name
-              price
-              product_id
-    }
-  }
+                category_id
+                created_at
+                description
+                image_url
+                stock_quantity
+                updated_at
+                name
+                price
+                product_id
+              }
+            }
           `,
         }),
       }),
       transformResponse: (response) => response.data.products,
     }),
+
+    // Fetch product details by ID
+    getProductdetail: builder.query({
+      query: (productId) => ({
+        method: "POST",
+        body: JSON.stringify({
+          query: `
+            query GetProductDetails($id:Int!) {
+              products(where: { product_id: { _eq: $id} }) {
+                description
+                image_url
+                name
+                price
+                category {
+                  category_id
+                  name
+                  description
+                }
+              }
+            }
+          `,
+          variables: { id: productId },
+        }),
+      }),
+      transformResponse: (response) => response.data.products[0],
+    }),
   }),
 });
 
-export const { useFetchProductsQuery } = ProductsAPI;
+export const { useFetchProductsQuery, useGetProductdetailQuery } = ProductsAPI;

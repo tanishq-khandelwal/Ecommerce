@@ -22,7 +22,7 @@ const UserDropdown = () => {
     dispatch(logout());
     logoutCookie();
     toast.success("User Logged Out Successfully");
-    navigate("/login");
+    navigate("/");
   };
 
   if(!user) return null;

@@ -6,10 +6,13 @@ import { useSelector } from "react-redux";
 import UserDropdown from "./userDropdown";
 
 const Navbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(1); // Example count
-  const [likedCount, setLikedCount] = useState(2); // Example count
 
+  const cartNo= useSelector((state)=>state?.auth?.user?.data?.carts);
+  const cartCnt=cartNo?.length;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(cartCnt); // Example count
+  const [likedCount, setLikedCount] = useState(2); // Example count
+  const [notificationCount,setNotificationCount]=useState(0)
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   const toggleMobileMenu = () => {
@@ -55,9 +58,9 @@ const Navbar = () => {
               d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
             />
           </svg>
-          {cartCount > 0 && (
+          {notificationCount > 0 && (
             <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-              {cartCount}
+              {notificationCount}
             </span>
           )}
         </button>
@@ -86,9 +89,14 @@ const Navbar = () => {
           <span className="sr-only">View CartItems</span>
           <img className="h-7 w-6 " src={cartsvg} />
 
-          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-            0
-          </span>
+
+
+            {cartCount>0 && (
+                        <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                          {cartCount}
+                          </span>
+            )}
+            
         </button>
 
         {isLoggedIn ? (
