@@ -1,0 +1,33 @@
+version: '3.6'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: tsk2003
+      POSTGRES_PASSWORD: tsk_2003
+      POSTGRES_DB: Ecommerce
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - my-network
+
+  hasura:
+    image: hasura/graphql-engine:v2.15.2
+    container_name: hasura
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://tsk2003:tsk_2003@postgres:5432/Ecommerce
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ADMIN_SECRET: XQFyYZkJ48TUd3LeJ3YDzVfYoURp5DEKcy1QDubTMhJQtw01vjjnlUjj5Vzsx55J
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - my-network
+
+networks:
+  my-network:

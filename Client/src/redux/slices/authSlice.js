@@ -50,6 +50,7 @@ const authSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(user));
       state.isLoggedIn = true;
       state.user = user;
+      localStorage.setItem("userId",user.data.user_id)
     },
     logout: (state) => {
       state.isLoggedIn = false,

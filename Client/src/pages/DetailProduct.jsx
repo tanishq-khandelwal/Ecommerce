@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import cashpng from "../assets/cash.png";
 import returnpng from "../assets/return.png";
 import deliverypng from "../assets/delivery.png"
+import AddToCartButton from "../components/AddToCartButton";
 
 const DetailProduct = () => {
   const [searchParams] = useSearchParams();
@@ -14,7 +15,7 @@ const DetailProduct = () => {
   );
 
   console.log(data);
-  
+
   return (
     <Layout>
       <div className="py-16 px-10">
@@ -58,14 +59,14 @@ const DetailProduct = () => {
                 </h3>
 
 
-                <div className="space-y-4 flex gap-6">
+                <div className=" flex gap-6">
 
 
-                  <div className="items-center border-2 rounded py-5 px-3 shadow-lg h-32">
+                  <div className="items-center border-2 rounded py-5 px-5 shadow-lg h-32">
                     <span className="text-green-600 flex items-center justify-center ">
-                      <img src={deliverypng} className="h-15 w-12"/>
+                      <img src={deliverypng} className=" w-12"/>
                     </span>
-                    <span className="text-gray-600">
+                    <span className="text-gray-600 font-semibold">
                       Free Home Delivery
                     </span>
                   </div>
@@ -75,7 +76,7 @@ const DetailProduct = () => {
                     <span className="text-red-600 flex items-center justify-center">
                       <img src={returnpng} className="h-15 w-12"/>
                     </span>
-                    <span className="text-gray-600">
+                    <span className="text-gray-600 font-semibold">
                       Free 30-Day Replacement
                     </span>
                   </div>
@@ -84,10 +85,10 @@ const DetailProduct = () => {
                   <div className=" items-center  border-2 rounded py-5 px-5 shadow-lg h-32">
                     <span className="text-yellow-500 flex items-center justify-center">
 
-                      <img src={cashpng} className="h-16 w-14"/>
+                      <img src={cashpng} className=" w-12"/>
                     </span>
-                    <span className="text-gray-600">
-                      10% Bank Offer on HDFC Cards
+                    <span className="text-gray-600 font-semibold">
+                      Cash on Delivery
                     </span>
                   </div>
 
@@ -110,9 +111,7 @@ const DetailProduct = () => {
 
               {/* Action Buttons */}
               <div className="flex space-x-4 mt-6">
-                <button className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition duration-300">
-                  Add to Cart
-                </button>
+                <AddToCartButton/>
                 <button className="bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-yellow-600 transition duration-300">
                   Add to Wishlist
                 </button>
