@@ -33,6 +33,7 @@ export const CartAPI = createApi({
                                     name
                                     description
                                 }
+                                  quantity
                             }
                         }
                     `,
@@ -40,7 +41,7 @@ export const CartAPI = createApi({
         }),
       }),
 
-      transformResponse:(response)=>response.data.cart[0].product
+      transformResponse:(response)=>response.data.cart
     }),
   }),
 });
