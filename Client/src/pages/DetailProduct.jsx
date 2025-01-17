@@ -14,7 +14,7 @@ const DetailProduct = () => {
     parseInt(productId)
   );
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <Layout>

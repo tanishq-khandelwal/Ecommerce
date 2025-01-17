@@ -21,17 +21,28 @@ const cartSlice = createSlice({
   },
   reducers: {
     addToCart: (state, action) => {
-      const { cart_id, quantity } = action.payload;
-      const existingItem = state.cartDetails.find((item) => item.cart_id === cart_id);
+      const {quantity,product_id } = action.payload;
+      console.log(action.payload);
+      console.log("Calling in Slice "+quantity,product_id);
+      const existingItem = state.cartDetails.find((item) => item.product_id === product_id);
       if (existingItem) {
-        existingItem.quantity += quantity; // Increment quantity if the item exists
+        existingItem.quantity = quantity; // Increment quantity if the item exists
       } else {
-        state.cartDetails.push({ cart_id, quantity }); // Add a new item if it doesn't exist
+        state.cartDetails.push({product_id, quantity }); // Add a new item if it doesn't exist
       }
     },
     removeFromCart: (state, action) => {
-      const cart_id = action.payload;
-      state.cartDetails = state.cartDetails.filter((item) => item.cart_id !== cart_id);
+      const {quantity,product_id} = action.payload;
+      console.log(action.payload);
+      console.log("Calling in Slice "+quantity,product_id);
+      if(quantity===0){
+        state.cartDetails = state.cartDetails.filter((item) => item.product_id !== product_id);
+      }
+      const existingItem = state.cartDetails.find((item) => item.product_id === product_id);
+      if (existingItem) {
+        existingItem.quantity = quantity; // Increment quantity if the item exists
+      }
+
     },
   },
 });

@@ -21,6 +21,7 @@ export const LOGIN = gql`
       carts {
         cart_id
         quantity
+        product_id
       }
     }
   }
