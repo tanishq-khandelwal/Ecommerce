@@ -12,14 +12,22 @@ const Cart = () => {
   // Ensure data is an array
   const cartItems = Array.isArray(data) ? data : [];
 
+  // Initialize quantities when cartItems change
   useEffect(() => {
-    // Initialize quantities based on cart data
-    const initialQuantities = {};
-    cartItems.forEach((item) => {
-      initialQuantities[item.cart_id] = item.quantity || 1;
-    });
-    setQuantities(initialQuantities);
-  }, [cartItems]);
+    if (cartItems.length > 0) {
+      const initialQuantities = {};
+      cartItems.forEach((item) => {
+        // Set initial quantity if not already set
+        if (!(item.cart_id in quantities)) {
+          initialQuantities[item.cart_id] = item.quantity || 1;
+        }
+      });
+      // Only update quantities if there are new items
+      if (Object.keys(initialQuantities).length > 0) {
+        setQuantities((prev) => ({ ...prev, ...initialQuantities }));
+      }
+    }
+  }, [cartItems, quantities]); // Make sure quantities only update when cartItems change
 
   const incrementQuantity = (cartId) => {
     setQuantities((prev) => ({

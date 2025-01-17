@@ -1,69 +1,87 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { addToCart,removeFromCart } from "../redux/slices/cartSlice";
-import { useDispatch } from "react-redux";
+import { addToCart, removeFromCart } from "../redux/slices/cartSlice";
+import { useAddToCartMutation, useUpdateCartMutation } from "../services/cart";
+
 const AddToCartButton = () => {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const productId = parseInt(searchParams.get('productId'), 10); // Convert to number
-  // console.log("Product ID from URL:", productId);
-  const [addedToCart, setAddedToCart] = useState(false);
+  const productId = parseInt(searchParams.get("productId"), 10); // Convert to number
+  
+  const [addToCartAPI, { isLoading: isAdding }] = useAddToCartMutation();
+  const [updateCartAPI, { isLoading: isUpdating }] = useUpdateCartMutation();
 
   const data = useSelector((state) => state.cart.cartDetails);
-
-  // console.log("Cart details:", data);
-
-  // Find the item with the correct product_id (convert productId to number)
   const item = data?.find((item) => item.product_id === productId);
 
-  // console.log("Found item:", item);
-
   const quantity = item ? item.quantity : 0;
-  // console.log("Quantity is:", quantity);
 
-  const [currentQuantity,setQuantity]=useState(quantity);
+  const [currentQuantity, setQuantity] = useState(quantity);
 
-  // const handleAddToCart = () => {
-  //   setAddedToCart(true);
-
-  //   addToCart(NewQuantity,productId);
-  // };
+  const userId = localStorage.getItem("userId");
 
   const incrementQuantity = () => {
-    const NewQuantity=currentQuantity+1;
-    setQuantity(currentQuantity + 1);
+    const NewQuantity = currentQuantity + 1;
+    setQuantity(NewQuantity); // Update quantity in state immediately
     dispatch(addToCart({ quantity: NewQuantity, product_id: productId }));
+    UpdateCartHandler(NewQuantity); // Update cart via API
   };
 
   const decrementQuantity = () => {
-    const NewQuantity=currentQuantity-1;
-    if (quantity > 1) {
-      setQuantity(currentQuantity - 1);
+    const NewQuantity = currentQuantity - 1;
+    if (NewQuantity >= 1) {
+      setQuantity(NewQuantity);
+      dispatch(removeFromCart({ quantity: NewQuantity, product_id: productId }));
+      UpdateCartHandler(NewQuantity); // Update cart via API
     } else {
-      // setAddedToCart(false); // Reset to "Add to Cart" when quantity goes to 0
       setQuantity(0);
+      dispatch(removeFromCart({ quantity: 0, product_id: productId }));
     }
+  };
 
-    dispatch(removeFromCart({ quantity: NewQuantity, product_id: productId }));
+  const handleAddToCart = (NewQuantity) => {
+    if (isAdding) return; // Prevent multiple calls if the mutation is already in progress
 
+    addToCartAPI({ userId, productId, quantity: NewQuantity })
+      .unwrap()
+      .then(() => {
+        alert("Added to Cart");
+      })
+      .catch((error) => {
+        console.error("Error occurred while adding to cart:", error);
+      });
+  };
+
+  const UpdateCartHandler = (NewQuantity) => {
+    if (isUpdating) return; // Prevent multiple calls if the mutation is already in progress
+
+    updateCartAPI({ productId, userId, quantity: NewQuantity })
+      .unwrap()
+      .then(() => {
+        alert("Cart Updated");
+      })
+      .catch((error) => {
+        console.error("Error occurred while updating cart:", error);
+      });
   };
 
   return (
     <div>
       {!item ? (
         <button
-          onClick={incrementQuantity}
+          onClick={() => handleAddToCart(currentQuantity)}
           className="px-10 py-4 bg-blue-500 text-white rounded-md"
+          disabled={isAdding}
         >
-          Add to Cart
+          {isAdding ? "Adding..." : "Add to Cart"}
         </button>
       ) : (
-        <div className="flex items-center space-x-3 border-2 rounded-md  w-auto">
+        <div className="flex items-center space-x-3 border-2 rounded-md w-auto">
           <button
             onClick={decrementQuantity}
             className="text-xl text-gray-500 border-r-2 px-3 py-2"
-            // disabled={quantity <= 1}
+            disabled={isUpdating}
           >
             -
           </button>
@@ -71,6 +89,7 @@ const AddToCartButton = () => {
           <button
             onClick={incrementQuantity}
             className="text-xl text-gray-500 border-l-2 px-3 py-2"
+            disabled={isUpdating}
           >
             +
           </button>
