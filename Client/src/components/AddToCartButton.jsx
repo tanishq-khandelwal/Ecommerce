@@ -41,12 +41,12 @@ const AddToCartButton = () => {
   };
 
   const handleAddToCart = (NewQuantity) => {
-    if (isAdding) return; // Prevent multiple calls if the mutation is already in progress
-
+    // if (isAdding) return; // Prevent multiple calls if the mutation is already in progress
+    incrementQuantity();
     addToCartAPI({ userId, productId, quantity: NewQuantity })
       .unwrap()
       .then(() => {
-        alert("Added to Cart");
+        // alert("Added to Cart");
       })
       .catch((error) => {
         console.error("Error occurred while adding to cart:", error);
@@ -59,7 +59,7 @@ const AddToCartButton = () => {
     updateCartAPI({ productId, userId, quantity: NewQuantity })
       .unwrap()
       .then(() => {
-        alert("Cart Updated");
+        // alert("Cart Updated");
       })
       .catch((error) => {
         console.error("Error occurred while updating cart:", error);
