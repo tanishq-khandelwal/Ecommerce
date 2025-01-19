@@ -8,7 +8,7 @@ const AddToCartButton = () => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const productId = parseInt(searchParams.get("productId"), 10); // Convert to number
-  
+
   const [addToCartAPI, { isLoading: isAdding }] = useAddToCartMutation();
   const [updateCartAPI, { isLoading: isUpdating }] = useUpdateCartMutation();
 
@@ -32,7 +32,9 @@ const AddToCartButton = () => {
     const NewQuantity = currentQuantity - 1;
     if (NewQuantity >= 1) {
       setQuantity(NewQuantity);
-      dispatch(removeFromCart({ quantity: NewQuantity, product_id: productId }));
+      dispatch(
+        removeFromCart({ quantity: NewQuantity, product_id: productId })
+      );
       UpdateCartHandler(NewQuantity); // Update cart via API
     } else {
       setQuantity(0);
