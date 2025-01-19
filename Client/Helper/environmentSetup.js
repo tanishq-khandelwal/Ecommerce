@@ -1,6 +1,6 @@
 const backendUrl = (type = "graphql") => {
     const LOCAL_URL = "http://localhost:3000/api/v1";
-    const GRAPHQL_URL = "https://wanted-halibut-67.hasura.app/v1/graphql";
+    const GRAPHQL_URL = "http://localhost:8080/v1/graphql";
   
     if (type === "local") {
       return LOCAL_URL;

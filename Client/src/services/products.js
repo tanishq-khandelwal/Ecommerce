@@ -12,7 +12,7 @@ export const ProductsAPI = createApi({
       headers.set("Content-Type", "application/json");
       headers.set(
         "x-hasura-admin-secret",
-        "XQFyYZkJ48TUd3LeJ3YDzVfYoURp5DEKcy1QDubTMhJQtw01vjjnlUjj5Vzsx55J"
+        "Tsk_2003"
       );
       return headers;
     },
