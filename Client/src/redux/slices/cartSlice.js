@@ -31,10 +31,19 @@ const cartSlice = createSlice({
     cartDetails: cart, // Initialize state with retrieved cart data
   },
   reducers: {
+    setCartFromLocalStorage: (state) => {
+      const data = localStorage.getItem("user");
+      if (data) {
+        try {
+          const parsedData = JSON.parse(data);
+          state.cartDetails = parsedData?.data?.carts || [];
+        } catch (error) {
+          console.error("Error parsing user data from localStorage:", error);
+        }
+      }
+    },
     addToCart: (state, action) => {
       const { quantity, product_id } = action.payload;
-      console.log(action.payload);
-      console.log("Calling in Slice " + quantity, product_id);
       const existingItem = state.cartDetails.find(
         (item) => item.product_id === product_id
       );
@@ -48,8 +57,6 @@ const cartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       const { quantity, product_id } = action.payload;
-      console.log(action.payload);
-      console.log("Calling in Slice " + quantity, product_id);
       if (quantity === 0) {
         state.cartDetails = state.cartDetails.filter(
           (item) => item.product_id !== product_id
@@ -65,11 +72,11 @@ const cartSlice = createSlice({
     },
     clearCart: (state) => {
       state.cartDetails = []; // Reset cart state
-      // saveCartToLocalStorage([]); // Clear cart data in localStorage
     },
   },
 });
 
 // Export actions and reducer
-export const { addToCart, removeFromCart,clearCart } = cartSlice.actions;
+export const { setCartFromLocalStorage, addToCart, removeFromCart, clearCart } =
+  cartSlice.actions;
 export const cartReducer = cartSlice.reducer;

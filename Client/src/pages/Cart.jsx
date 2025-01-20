@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
-import { useGetCartDetailsQuery, useRemoveCartMutation } from "../services/cart.js";
+import {
+  useGetCartDetailsQuery,
+  useRemoveCartMutation,
+} from "../services/cart.js";
 import CartButton from "../components/cartButton.jsx";
 import { removeFromCart } from "../redux/slices/cartSlice.js";
 import { useDispatch } from "react-redux";
@@ -11,7 +14,7 @@ const Cart = () => {
   const [quantities, setQuantities] = useState({});
   const { data, isLoading, error, refetch } = useGetCartDetailsQuery(userId);
   const [removeCartAPI] = useRemoveCartMutation();
-  
+
   const cartItems = Array.isArray(data) ? data : [];
 
   useEffect(() => {
@@ -34,10 +37,10 @@ const Cart = () => {
     try {
       // Optimistically remove the item from local state
       dispatch(removeFromCart({ quantity: 0, product_id: productId }));
-      
+
       // Call API to remove the item
       await removeCartAPI({ userId, productId }).unwrap();
-      
+
       // Refetch to sync with the server
       refetch();
     } catch (err) {
@@ -82,10 +85,15 @@ const Cart = () => {
                   </p>
                 </div>
                 <div className="flex gap-4 items-center">
-                  <CartButton productId={item?.product?.product_id} refetchCart={refetch} />
+                  <CartButton
+                    productId={item?.product?.product_id}
+                    refetchCart={refetch}
+                  />
                   <button
                     className="flex items-center px-8 py-2 border-2 rounded-md text-white bg-red-600"
-                    onClick={() => handleRemoveItem(userId, item?.product?.product_id)}
+                    onClick={() =>
+                      handleRemoveItem(userId, item?.product?.product_id)
+                    }
                   >
                     Remove
                   </button>
