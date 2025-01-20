@@ -9,10 +9,7 @@ export const CartAPI = createApi({
     baseUrl: url,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
-      headers.set(
-        "x-hasura-admin-secret",
-        "Tsk_2003"
-      );
+      headers.set("x-hasura-admin-secret", "Tsk_2003");
       return headers;
     },
   }),
@@ -75,7 +72,28 @@ export const CartAPI = createApi({
         }),
       }),
     }),
+
+    removeCart: builder.mutation({
+      query: ({ productId, userId }) => ({
+        method: "POST",
+        body: JSON.stringify({
+          query: `
+          mutation removeFromCart($productId:Int!,$userId:Int!) {
+            delete_cart(where: {user_id: {_eq: $userId}, product_id: {_eq: $productId}}) {
+              affected_rows
+            }
+          }
+          `,
+          variables: { productId, userId },
+        }),
+      }),
+    }),
   }),
 });
 
-export const { useGetCartDetailsQuery, useAddToCartMutation, useUpdateCartMutation } = CartAPI;
+export const {
+  useGetCartDetailsQuery,
+  useAddToCartMutation,
+  useUpdateCartMutation,
+  useRemoveCartMutation,
+} = CartAPI;

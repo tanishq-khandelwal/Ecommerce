@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { addToCart, removeFromCart } from "../redux/slices/cartSlice";
-import { useAddToCartMutation, useUpdateCartMutation } from "../services/cart";
+import { useAddToCartMutation, useUpdateCartMutation,useRemoveCartMutation } from "../services/cart";
 
 const AddToCartButton = () => {
   const dispatch = useDispatch();
@@ -11,6 +11,7 @@ const AddToCartButton = () => {
 
   const [addToCartAPI, { isLoading: isAdding }] = useAddToCartMutation();
   const [updateCartAPI, { isLoading: isUpdating }] = useUpdateCartMutation();
+  const [removeCartAPI,{isLoading:isRemoving}]=useRemoveCartMutation();
 
   const data = useSelector((state) => state.cart.cartDetails);
   const item = data?.find((item) => item.product_id === productId);
@@ -38,7 +39,11 @@ const AddToCartButton = () => {
       UpdateCartHandler(NewQuantity); // Update cart via API
     } else {
       setQuantity(0);
-      dispatch(removeFromCart({ quantity: 0, product_id: productId }));
+      removeCartAPI({userId,productId}).unwrap().then(()=>{
+        dispatch(
+          removeFromCart({ quantity: NewQuantity, product_id: productId })
+        );
+      })
     }
   };
 

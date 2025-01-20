@@ -8,7 +8,7 @@ import UserDropdown from "./userDropdown";
 const Navbar = () => {
 
   const Navigate=useNavigate();
-  const cartNo = useSelector((state) => state?.auth?.user?.data?.carts);
+  const cartNo = useSelector((state) => state?.cart?.cartDetails);
   const cartCnt = cartNo?.length;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(cartCnt); // Example count
@@ -25,7 +25,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 p-4 ">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="text-white font-bold text-xl">
