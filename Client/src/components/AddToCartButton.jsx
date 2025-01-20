@@ -1,8 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { addToCart, removeFromCart } from "../redux/slices/cartSlice";
-import { useAddToCartMutation, useUpdateCartMutation,useRemoveCartMutation } from "../services/cart";
+import { useAddToCartMutation, useUpdateCartMutation, useRemoveCartMutation } from "../services/cart";
+
+const debounce = (func, delay) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  };
+};
 
 const AddToCartButton = () => {
   const dispatch = useDispatch();
@@ -11,7 +19,7 @@ const AddToCartButton = () => {
 
   const [addToCartAPI, { isLoading: isAdding }] = useAddToCartMutation();
   const [updateCartAPI, { isLoading: isUpdating }] = useUpdateCartMutation();
-  const [removeCartAPI,{isLoading:isRemoving}]=useRemoveCartMutation();
+  const [removeCartAPI, { isLoading: isRemoving }] = useRemoveCartMutation();
 
   const data = useSelector((state) => state.cart.cartDetails);
   const item = data?.find((item) => item.product_id === productId);
@@ -22,55 +30,44 @@ const AddToCartButton = () => {
 
   const userId = localStorage.getItem("userId");
 
+  const debounceUpdateCart = useCallback(
+    debounce((newQuantity) => {
+      updateCartAPI({ productId, userId, quantity: newQuantity })
+        .unwrap()
+        .catch((error) => console.error("Error occurred while updating cart:", error));
+    }, 300),
+    []
+  );
+
   const incrementQuantity = () => {
-    const NewQuantity = currentQuantity + 1;
-    setQuantity(NewQuantity); // Update quantity in state immediately
-    dispatch(addToCart({ quantity: NewQuantity, product_id: productId }));
-    UpdateCartHandler(NewQuantity); // Update cart via API
+    const newQuantity = currentQuantity + 1;
+    setQuantity(newQuantity); // Update quantity in state immediately
+    dispatch(addToCart({ quantity: newQuantity, product_id: productId }));
+    debounceUpdateCart(newQuantity); // Debounced API call
   };
 
   const decrementQuantity = () => {
-    const NewQuantity = currentQuantity - 1;
-    if (NewQuantity >= 1) {
-      setQuantity(NewQuantity);
-      dispatch(
-        removeFromCart({ quantity: NewQuantity, product_id: productId })
-      );
-      UpdateCartHandler(NewQuantity); // Update cart via API
+    const newQuantity = currentQuantity - 1;
+    if (newQuantity >= 1) {
+      setQuantity(newQuantity);
+      dispatch(removeFromCart({ quantity: newQuantity, product_id: productId }));
+      debounceUpdateCart(newQuantity); // Debounced API call
     } else {
       setQuantity(0);
-      removeCartAPI({userId,productId}).unwrap().then(()=>{
-        dispatch(
-          removeFromCart({ quantity: NewQuantity, product_id: productId })
-        );
-      })
+      removeCartAPI({ userId, productId })
+        .unwrap()
+        .then(() => {
+          dispatch(removeFromCart({ quantity: 0, product_id: productId }));
+        })
+        .catch((error) => console.error("Error occurred while removing from cart:", error));
     }
   };
 
-  const handleAddToCart = (NewQuantity) => {
-    // if (isAdding) return; // Prevent multiple calls if the mutation is already in progress
+  const handleAddToCart = (newQuantity) => {
     incrementQuantity();
-    addToCartAPI({ userId, productId, quantity: NewQuantity })
+    addToCartAPI({ userId, productId, quantity: newQuantity })
       .unwrap()
-      .then(() => {
-        // alert("Added to Cart");
-      })
-      .catch((error) => {
-        console.error("Error occurred while adding to cart:", error);
-      });
-  };
-
-  const UpdateCartHandler = (NewQuantity) => {
-    if (isUpdating) return; // Prevent multiple calls if the mutation is already in progress
-
-    updateCartAPI({ productId, userId, quantity: NewQuantity })
-      .unwrap()
-      .then(() => {
-        // alert("Cart Updated");
-      })
-      .catch((error) => {
-        console.error("Error occurred while updating cart:", error);
-      });
+      .catch((error) => console.error("Error occurred while adding to cart:", error));
   };
 
   return (

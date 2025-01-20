@@ -12,7 +12,7 @@ const Navbar = () => {
   const cartCnt = cartNo?.length;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(cartCnt); // Example count
-  const [likedCount, setLikedCount] = useState(2); // Example count
+  const [likedCount, setLikedCount] = useState(0); // Example count
   const [notificationCount, setNotificationCount] = useState(0);
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 

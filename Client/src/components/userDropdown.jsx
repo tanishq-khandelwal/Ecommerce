@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import avatar from "../assets/avatar.svg"
 import {logout, useLogoutMutation} from "../redux/slices/authSlice.js"
 import toast from "react-hot-toast";
+import { clearCart } from "../redux/slices/cartSlice.js";
 // import { useDispatch } from "react-redux";
 
 
@@ -20,6 +21,7 @@ const UserDropdown = () => {
 //   console.log(res)
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(clearCart());
     logoutCookie();
     toast.success("User Logged Out Successfully");
     navigate("/");
