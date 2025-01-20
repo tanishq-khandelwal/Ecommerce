@@ -4,8 +4,9 @@ import { useGetProductdetailQuery } from "../services/products";
 import { useSearchParams } from "react-router-dom";
 import cashpng from "../assets/cash.png";
 import returnpng from "../assets/return.png";
-import deliverypng from "../assets/delivery.png"
+import deliverypng from "../assets/delivery.png";
 import AddToCartButton from "../components/AddToCartButton";
+import { useSelector } from "react-redux";
 
 const DetailProduct = () => {
   const [searchParams] = useSearchParams();
@@ -13,6 +14,8 @@ const DetailProduct = () => {
   const { data, error, isLoading } = useGetProductdetailQuery(
     parseInt(productId)
   );
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   // console.log(data);
 
@@ -58,41 +61,33 @@ const DetailProduct = () => {
                   Additional Offers
                 </h3>
 
-
                 <div className=" flex gap-6">
-
-
                   <div className="items-center border-2 rounded py-5 px-5 shadow-lg h-32">
                     <span className="text-green-600 flex items-center justify-center ">
-                      <img src={deliverypng} className=" w-12"/>
+                      <img src={deliverypng} className=" w-12" />
                     </span>
                     <span className="text-gray-600 font-semibold">
                       Free Home Delivery
                     </span>
                   </div>
 
-
                   <div className=" items-center border-2 rounded py-5 px-5 shadow-lg h-32">
                     <span className="text-red-600 flex items-center justify-center">
-                      <img src={returnpng} className="h-15 w-12"/>
+                      <img src={returnpng} className="h-15 w-12" />
                     </span>
                     <span className="text-gray-600 font-semibold">
                       Free 30-Day Replacement
                     </span>
                   </div>
 
-
                   <div className=" items-center  border-2 rounded py-5 px-5 shadow-lg h-32">
                     <span className="text-yellow-500 flex items-center justify-center">
-
-                      <img src={cashpng} className=" w-12"/>
+                      <img src={cashpng} className=" w-12" />
                     </span>
                     <span className="text-gray-600 font-semibold">
                       Cash on Delivery
                     </span>
                   </div>
-
-
                 </div>
               </div>
               {/* Product Specifications */}
@@ -110,12 +105,21 @@ const DetailProduct = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex space-x-4 mt-6">
-                <AddToCartButton/>
-                <button className="bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-yellow-600 transition duration-300">
+             
+                {isLoggedIn ? (
+                   <div className="flex space-x-4 mt-6">
+                  <AddToCartButton />
+                  <button className="bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-yellow-600 transition duration-300">
                   Add to Wishlist
                 </button>
               </div>
+                ) : (
+                  <div className="text-red-600 text-2xl font-bold">
+                    Please Log In to Continue <a href="/login" className=" text-blue-700 underline text-xl ml-2">Login</a>
+                  </div>
+                )}
+
+               
             </div>
 
             {/* Additional Details Section */}
@@ -190,9 +194,7 @@ const DetailProduct = () => {
             </div>
           </div>
         ) : (
-          <p className="text-center text-lg text-gray-500">
-            
-          </p>
+          <p className="text-center text-lg text-gray-500"></p>
         )}
       </div>
     </Layout>

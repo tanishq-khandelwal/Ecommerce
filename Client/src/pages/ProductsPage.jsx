@@ -13,6 +13,8 @@ const ProductsPage = () => {
     navigate(`/product?productId=${product_id}`)
   }
 
+
+
   // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (

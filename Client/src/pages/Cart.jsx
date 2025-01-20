@@ -1,55 +1,52 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout.jsx";
-import { useGetCartDetailsQuery } from "../services/cart.js";
+import { useGetCartDetailsQuery, useRemoveCartMutation } from "../services/cart.js";
+import CartButton from "../components/cartButton.jsx";
+import { removeFromCart } from "../redux/slices/cartSlice.js";
+import { useDispatch } from "react-redux";
 
 const Cart = () => {
+  const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
-  const [quantities, setQuantities] = useState({}); // Object to track quantities per item
-
-  // Fetch cart details based on userId
-  const { data, isLoading, error } = useGetCartDetailsQuery(userId);
-
-  // Ensure data is an array
+  const [quantities, setQuantities] = useState({});
+  const { data, isLoading, error, refetch } = useGetCartDetailsQuery(userId);
+  const [removeCartAPI] = useRemoveCartMutation();
+  
   const cartItems = Array.isArray(data) ? data : [];
 
-  // Initialize quantities when cartItems change
   useEffect(() => {
     if (cartItems.length > 0) {
       const initialQuantities = {};
       cartItems.forEach((item) => {
-        // Set initial quantity if not already set
-        if (!(item.cart_id in quantities)) {
-          initialQuantities[item.cart_id] = item.quantity || 1;
-        }
+        initialQuantities[item.cart_id] = item.quantity || 1; // Default to 1 if no quantity is present
       });
-      // Only update quantities if there are new items
-      if (Object.keys(initialQuantities).length > 0) {
-        setQuantities((prev) => ({ ...prev, ...initialQuantities }));
-      }
+      setQuantities(initialQuantities);
     }
-  }, [cartItems, quantities]); // Make sure quantities only update when cartItems change
+  }, [cartItems]);
 
-  const incrementQuantity = (cartId) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [cartId]: prev[cartId] + 1,
-    }));
-  };
-
-  const decrementQuantity = (cartId) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [cartId]: prev[cartId] > 1 ? prev[cartId] - 1 : 1,
-    }));
-  };
-
-  // Calculate the total value
   const totalValue = cartItems.reduce((total, item) => {
     const quantity = quantities[item.cart_id] || 1;
-    return total + item?.product?.price * quantity;
+    const price = item?.product?.price || 0; // Handle missing price gracefully
+    return total + price * quantity;
   }, 0);
 
-  // Handle loading, error, and data display
+  const handleRemoveItem = async (userId, productId) => {
+    try {
+      // Optimistically remove the item from local state
+      dispatch(removeFromCart({ quantity: 0, product_id: productId }));
+      
+      // Call API to remove the item
+      await removeCartAPI({ userId, productId }).unwrap();
+      
+      // Refetch to sync with the server
+      refetch();
+    } catch (err) {
+      console.error("Failed to remove item:", err);
+      // Optionally, dispatch a rollback action here if needed
+      // dispatch(addToCart({ ...item }));  // Example rollback if you want to undo
+    }
+  };
+
   if (isLoading) {
     return <Layout>Loading...</Layout>;
   }
@@ -62,51 +59,46 @@ const Cart = () => {
     <Layout>
       <div className="py-16 px-10 bg-gray-100">
         <div className="cart-items max-w-5xl mx-auto">
-          {cartItems.map((item) => (
-            <div
-              key={item?.cart_id}
-              className="cart-item flex justify-between py-6 px-4 bg-white shadow-lg rounded-lg mb-6 transition-transform transform hover:scale-105"
-            >
-              <img
-                src={item?.product?.image_url}
-                alt={item?.product?.name}
-                className="w-24 h-24 object-cover rounded-lg border shadow-md"
-              />
-              <div className="flex-1 ml-6">
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {item?.product?.name}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {item?.product?.description}
-                </p>
-                <p className="text-base font-medium text-gray-900 mt-2">
-                  Price: ${item?.product?.price}
-                </p>
-              </div>
-              <div className="flex flex-col items-end space-y-2">
-                <div className="flex items-center space-x-3 border-2 rounded-md w-auto">
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <div
+                key={item?.product.product_id}
+                className="cart-item flex justify-between py-6 px-4 bg-white shadow-lg rounded-lg mb-6 transition-transform transform hover:scale-105"
+              >
+                <img
+                  src={item?.product?.image_url}
+                  alt={item?.product?.name}
+                  className="w-24 h-24 object-cover rounded-lg border shadow-md"
+                />
+                <div className="flex-1 ml-6">
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {item?.product?.name}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {item?.product?.description}
+                  </p>
+                  <p className="text-base font-medium text-gray-900 mt-2">
+                    Price: ${item?.product?.price}
+                  </p>
+                </div>
+                <div className="flex gap-4 items-center">
+                  <CartButton productId={item?.product?.product_id} refetchCart={refetch} />
                   <button
-                    onClick={() => decrementQuantity(item.cart_id)}
-                    className="text-xl text-gray-500 border-r-2 px-3 py-2"
+                    className="flex items-center px-8 py-2 border-2 rounded-md text-white bg-red-600"
+                    onClick={() => handleRemoveItem(userId, item?.product?.product_id)}
                   >
-                    -
-                  </button>
-                  <span className="text-lg font-semibold">
-                    {quantities[item.cart_id] || 1}
-                  </span>
-                  <button
-                    onClick={() => incrementQuantity(item.cart_id)}
-                    className="text-xl text-gray-500 border-l-2 px-3 py-2"
-                  >
-                    +
+                    Remove
                   </button>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="h-full w-full flex justify-center items-center">
+              <p className="text-2xl font-sans font-bold">Your Cart is Empty</p>
             </div>
-          ))}
+          )}
         </div>
 
-        {/* Checkout Section */}
         <div className="checkout-section mt-12 text-right">
           <div className="total-value text-lg font-medium text-gray-800 mb-4">
             Total: ${totalValue.toFixed(2)}
