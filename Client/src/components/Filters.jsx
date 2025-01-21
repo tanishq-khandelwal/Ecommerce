@@ -20,8 +20,6 @@ const Filters = ({ onApplyFilters }) => {
     handleApplyFilters(); // Trigger the filter application when filters change
   }, [selectedCategory, selectedPriceRange, selectedRating]);
 
- 
-
   const Categories = [
     { value: "1", label: "Electronics" },
     { value: "2", label: "Fashion" },
@@ -54,8 +52,9 @@ const Filters = ({ onApplyFilters }) => {
       <select
         className="border rounded-md p-2"
         value={selectedCategory}
-        onChange={(e) =>{ setSelectedCategory(e.target.value),handleApplyFilters()}}
-  
+        onChange={(e) => {
+          setSelectedCategory(e.target.value), handleApplyFilters();
+        }}
       >
         <option value="">Categories</option>
         {Categories.map((c) => (
@@ -67,7 +66,9 @@ const Filters = ({ onApplyFilters }) => {
       <select
         className="border rounded-md p-2"
         value={selectedPriceRange}
-        onChange={(e) => setSelectedPriceRange(e.target.value)}
+        onChange={(e) => {
+          setSelectedPriceRange(e.target.value), handleApplyFilters();
+        }}
       >
         <option value="">Price</option>
         {Price.map((p) => (
@@ -79,7 +80,9 @@ const Filters = ({ onApplyFilters }) => {
       <select
         className="border rounded-md p-2"
         value={selectedRating}
-        onChange={(e) => setSelectedRating(e.target.value)}
+        onChange={(e) => {
+          setSelectedRating(e.target.value), handleApplyFilters();
+        }}
       >
         <option value="">Rating</option>
         {Ratings.map((r) => (

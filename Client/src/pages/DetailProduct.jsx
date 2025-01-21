@@ -7,6 +7,7 @@ import returnpng from "../assets/return.png";
 import deliverypng from "../assets/delivery.png";
 import AddToCartButton from "../components/AddToCartButton";
 import { useSelector } from "react-redux";
+import StarRating from "../components/StarRatings";
 
 const DetailProduct = () => {
   const [searchParams] = useSearchParams();
@@ -51,8 +52,10 @@ const DetailProduct = () => {
 
               {/* Product Ratings */}
               <div className="flex items-center space-x-2 mb-4">
-                <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
-                <span className="text-gray-500">(100 reviews)</span>
+                <StarRating
+                  rating={data.reviews_aggregate.aggregate.avg.rating}
+                />{" "}
+                <div>({data.reviews_aggregate.aggregate.count})</div>
               </div>
 
               {/* Additional Offers Section */}
@@ -105,21 +108,25 @@ const DetailProduct = () => {
               </div>
 
               {/* Action Buttons */}
-             
-                {isLoggedIn ? (
-                   <div className="flex space-x-4 mt-6">
+
+              {isLoggedIn ? (
+                <div className="flex space-x-4 mt-6">
                   <AddToCartButton />
                   <button className="bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-yellow-600 transition duration-300">
-                  Add to Wishlist
-                </button>
-              </div>
-                ) : (
-                  <div className="text-red-600 text-2xl font-bold">
-                    Please Log In to Continue <a href="/login" className=" text-blue-700 underline text-xl ml-2">Login</a>
-                  </div>
-                )}
-
-               
+                    Add to Wishlist
+                  </button>
+                </div>
+              ) : (
+                <div className="text-red-600 text-2xl font-bold">
+                  Please Log In to Continue{" "}
+                  <a
+                    href="/login"
+                    className=" text-blue-700 underline text-xl ml-2"
+                  >
+                    Login
+                  </a>
+                </div>
+              )}
             </div>
 
             {/* Additional Details Section */}
@@ -130,8 +137,10 @@ const DetailProduct = () => {
                   Customer Reviews
                 </h3>
                 <div className="flex items-center space-x-2 mb-4">
-                  <span className="text-yellow-500">⭐⭐⭐⭐⭐</span>
-                  <span className="text-gray-600">(100 reviews)</span>
+                  <StarRating
+                    rating={data.reviews_aggregate.aggregate.avg.rating}
+                  />{" "}
+                  <div>({data.reviews_aggregate.aggregate.count})</div>
                 </div>
 
                 {/* Review Breakdown */}

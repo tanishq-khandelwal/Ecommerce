@@ -3,6 +3,7 @@ import Layout from "../Layout";
 import { useFetchProductsQuery } from "../services/products";
 import Filters from "../components/Filters";
 import { useNavigate } from "react-router-dom";
+import StarRating from "../components/StarRatings";
 
 const ProductsPage = () => {
   const { data, error, isLoading } = useFetchProductsQuery();
@@ -40,7 +41,7 @@ const ProductsPage = () => {
     }
   }, [data]);
 
-  // console.log(filteredProducts);
+  console.log(filteredProducts);
 
   return (
     <Layout>
@@ -62,7 +63,16 @@ const ProductsPage = () => {
                   className="w-full h-60 object-contain rounded-lg mb-4"
                 />
                 <div className="px-2 py-2 text-left">
-                  <h2 className="text-xl font-semibold">{product.name}</h2>
+                  <div className="flex justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold">{product.name}</h2>
+                    </div>
+                    <div className="flex justify-center items-center">
+                      <StarRating
+                        rating={product.reviews_aggregate.aggregate.avg.rating}
+                      />
+                    </div>
+                  </div>
                   <p>{product.description}</p>
                   <p className="text-red-600 font-sans font-semibold text-xl">
                     ${product.price}

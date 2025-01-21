@@ -10,10 +10,7 @@ export const ProductsAPI = createApi({
     baseUrl: url,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
-      headers.set(
-        "x-hasura-admin-secret",
-        "Tsk_2003"
-      );
+      headers.set("x-hasura-admin-secret", "Tsk_2003");
       return headers;
     },
   }),
@@ -35,6 +32,13 @@ export const ProductsAPI = createApi({
                 name
                 price
                 product_id
+                reviews_aggregate {
+                  aggregate {
+                    avg {
+                      rating
+                    }
+                  }
+                }
               }
             }
           `,
@@ -60,6 +64,14 @@ export const ProductsAPI = createApi({
                   name
                   description
                 }
+              reviews_aggregate {
+                aggregate {
+                  avg {
+                    rating
+                  }
+                  count
+                }
+              }
               }
             }
           `,
