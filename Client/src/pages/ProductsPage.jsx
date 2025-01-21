@@ -1,33 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
 import { useFetchProductsQuery } from "../services/products";
 import Filters from "../components/Filters";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const ProductsPage = () => {
   const { data, error, isLoading } = useFetchProductsQuery();
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const navigate = useNavigate();
 
-  const handleProductClick=(product_id)=>{
-    navigate(`/product?productId=${product_id}`)
-  }
+  const handleProductClick = (product_id) => {
+    navigate(`/product?productId=${product_id}`);
+  };
 
+  const handleApplyFilters = (filters) => {
+    if (!data) return;
 
+    // console.log("Applied filters are:", filters);
+    const filtered = data.filter((product) => {
+      const matchesCategory =
+        !filters.category || product.category_id === Number(filters.category);
+      const matchesPrice =
+        !filters.priceRange ||
+        (product.price >= parseInt(filters.priceRange.split("-")[0]) &&
+          product.price <= parseInt(filters.priceRange.split("-")[1]));
+      const matchesRating =
+        !filters.rating ||
+        product.rating >= parseInt(filters.rating.split("-")[0]);
 
-  // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+      return matchesCategory && matchesPrice && matchesRating;
+    });
+    setFilteredProducts(filtered);
+  };
+
+  // Set initial filteredProducts on page load if no filters are applied
+  useEffect(() => {
+    if (data) {
+      setFilteredProducts(data);
+    }
+  }, [data]);
+
+  // console.log(filteredProducts);
 
   return (
     <Layout>
-      <Filters />
+      <Filters onApplyFilters={handleApplyFilters} />
       <div className="py-16 px-10">
         {isLoading && <p>Loading...</p>}
         {error && <p className="text-red-500">Error: {error.message}</p>}
 
-        {data && (
+        {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
-            {data.map((product) => (
-              <div 
+            {filteredProducts.map((product) => (
+              <div
                 key={product.product_id}
                 className="bg-white p-1 border rounded-lg shadow-lg hover:shadow-2xl transition"
               >
@@ -36,7 +61,6 @@ const ProductsPage = () => {
                   alt="product"
                   className="w-full h-60 object-contain rounded-lg mb-4"
                 />
-
                 <div className="px-2 py-2 text-left">
                   <h2 className="text-xl font-semibold">{product.name}</h2>
                   <p>{product.description}</p>
@@ -48,7 +72,7 @@ const ProductsPage = () => {
                     <button
                       className="mt-4 px-10 w-auto py-2 bg-[#1E55DE] text-white rounded-lg hover:bg-blue-600"
                       onClick={() => {
-                        handleProductClick(product.product_id)
+                        handleProductClick(product.product_id);
                       }}
                     >
                       Add to Cart
@@ -58,6 +82,8 @@ const ProductsPage = () => {
               </div>
             ))}
           </div>
+        ) : (
+          <p>No products found for the selected filters.</p>
         )}
       </div>
     </Layout>
