@@ -45,7 +45,7 @@ const Filters = ({ onApplyFilters }) => {
 
   return (
     <div className="p-2 bg-white flex gap-8 justify-left items-center px-10">
-      <div className="mb-4 border rounded-md p-2 flex justify-center items-center hover:shadow-xl transition">
+      <div className="mb-4 border rounded-md p-2 mt-4 flex justify-center items-center hover:shadow-xl transition">
         Filters
         <IoFilterOutline className="ml-8" />
       </div>

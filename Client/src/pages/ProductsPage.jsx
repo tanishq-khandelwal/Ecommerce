@@ -27,7 +27,7 @@ const ProductsPage = () => {
           product.price <= parseInt(filters.priceRange.split("-")[1]));
       const matchesRating =
         !filters.rating ||
-        product.rating >= parseInt(filters.rating.split("-")[0]);
+        product.reviews_aggregate.aggregate.avg.rating >= parseInt(filters.rating.split("-")[0]);
 
       return matchesCategory && matchesPrice && matchesRating;
     });
@@ -93,7 +93,7 @@ const ProductsPage = () => {
             ))}
           </div>
         ) : (
-          <p>No products found for the selected filters.</p>
+          <p> </p>
         )}
       </div>
     </Layout>
