@@ -86,6 +86,7 @@ const Login = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                data-testid="toggle-password-visibility"
               >
                 {showPassword ? (
                   <img src={showpass} className="w-5 h-5"/>

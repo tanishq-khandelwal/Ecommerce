@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
@@ -46,4 +46,78 @@ describe("Login Component", () => {
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
   });
+
+  test("Should Update email when email in input",()=>{
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <LoginPage/>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const emailInput=screen.getByLabelText(/email/i);
+    fireEvent.change(emailInput,{target:{value:"test@gmail.com"}});
+    expect(emailInput.value).toBe("test@gmail.com");
+  });
+
+  test("Should update Password when password is Input",()=>{
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <LoginPage/>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const passwordInput=screen.getByLabelText(/password/i);
+    fireEvent.change(passwordInput,{target:{value:'password123'}});
+    expect(passwordInput.value).toBe("password123");
+  });
+
+  test("toggles password visibility when the eye icon is clicked", () => {
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <LoginPage/>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const passwordInput = screen.getByLabelText(/password/i);
+    const toggleButton = screen.getByTestId("toggle-password-visibility");
+
+    expect(passwordInput.type).toBe("password");
+
+    fireEvent.click(toggleButton);
+    expect(passwordInput.type).toBe("text");
+
+    fireEvent.click(toggleButton);
+    expect(passwordInput.type).toBe("password");
+  });
+
+test("Displays Loading text when the login request is being processed",async()=>{
+  useLoginMutation.mockReturnValue([mockLogin, { isLoading: true, isError: false, error: null }]);
+  render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <LoginPage/>
+      </MemoryRouter>
+    </Provider>
+  );
+
+  const emailInput=screen.getByLabelText(/email/i);
+  const passwordInput=screen.getByLabelText(/password/i);
+  const loginButton=screen.getByRole('button',{name:/login/i});
+
+
+  fireEvent.change(emailInput,{target:{value:"test@gmail.com"}});
+  fireEvent.change(passwordInput,{target:{value:"password123"}});
+  fireEvent.click(loginButton);
+
+  await waitFor(()=>{
+    expect(toast.loading).toHaveBeenCalledWith("Loading....");
+  })
+})
 });
