@@ -111,7 +111,7 @@ const DetailProduct = () => {
 
               {isLoggedIn ? (
                 <div className="flex space-x-4 mt-6">
-                  <AddToCartButton />
+                  <AddToCartButton price={data?.price} />
                   <button className="bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-yellow-600 transition duration-300">
                     Add to Wishlist
                   </button>

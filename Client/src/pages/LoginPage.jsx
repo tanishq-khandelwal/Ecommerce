@@ -24,7 +24,7 @@ const Login = () => {
         toast.loading("Loading....");
       }
     try {
-      const response = await login({ email, password });
+      const response = await login({ email, password }).unwrap();
       dispatch(setCredentials({user:response}))
       console.log("Login successful:", response);
 

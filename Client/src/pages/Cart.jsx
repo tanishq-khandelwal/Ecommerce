@@ -6,7 +6,7 @@ import {
 } from "../services/cart.js";
 import CartButton from "../components/cartButton.jsx";
 import { removeFromCart } from "../redux/slices/cartSlice.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ const Cart = () => {
 
   const cartItems = Array.isArray(data) ? data : [];
 
+  const cartDetails=useSelector((state)=>state.cart.cartDetails);
   useEffect(() => {
     if (cartItems.length > 0) {
       const initialQuantities = {};
@@ -27,10 +28,8 @@ const Cart = () => {
     }
   }, [cartItems]);
 
-  const totalValue = cartItems.reduce((total, item) => {
-    const quantity = quantities[item.cart_id] || 1;
-    const price = item?.product?.price || 0; // Handle missing price gracefully
-    return total + price * quantity;
+  const totalValue = cartDetails.reduce((total, item) => {
+    return total + item.quantity * item.product.price;
   }, 0);
 
   const handleRemoveItem = async (userId, productId) => {

@@ -43,14 +43,14 @@ const cartSlice = createSlice({
       }
     },
     addToCart: (state, action) => {
-      const { quantity, product_id } = action.payload;
+      const { quantity, product_id,price } = action.payload;
       const existingItem = state.cartDetails.find(
         (item) => item.product_id === product_id
       );
       if (existingItem) {
         existingItem.quantity = quantity; // Increment quantity if the item exists
       } else {
-        state.cartDetails.push({ product_id, quantity }); // Add a new item if it doesn't exist
+        state.cartDetails.push({ product_id, quantity ,product:{price}}); // Add a new item if it doesn't exist
       }
 
       saveCartToLocalStorage(state.cartDetails);

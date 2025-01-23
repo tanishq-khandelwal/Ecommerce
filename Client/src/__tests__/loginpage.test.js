@@ -173,13 +173,13 @@ describe("Login Component", () => {
     const mockResponse = { user: "testUser" };
     useLoginMutation.mockReturnValue([
       mockLogin,
-      { isLoading: false, isError: false, error: false },
+      { isLoading: false, isError: false, error: null },
     ]);
     mockLogin.mockResolvedValue(mockResponse);
-
+  
     const mockNavigate = jest.fn();
     useNavigate.mockReturnValue(mockNavigate);
-
+  
     render(
       <Provider store={store}>
         <MemoryRouter>
@@ -187,17 +187,23 @@ describe("Login Component", () => {
         </MemoryRouter>
       </Provider>
     );
-
+  
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
     const loginButton = screen.getByRole("button", { name: /login/i });
-
+  
     fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(loginButton);
-
+  
+    // Debug Redux Dispatch
     await waitFor(() => {
+      expect(mockLogin).toHaveBeenCalledWith({ email: "test@gmail.com", password: "password123" });
+      expect(setCredentials).toHaveBeenCalledWith({ user: mockResponse });
       expect(mockNavigate).toHaveBeenCalledWith("/");
     });
+  
+    screen.debug(); // Outputs the current DOM state
   });
+  
 });

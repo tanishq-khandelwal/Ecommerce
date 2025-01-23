@@ -12,7 +12,7 @@ const debounce = (func, delay) => {
   };
 };
 
-const AddToCartButton = () => {
+const AddToCartButton = ({price}) => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const productId = parseInt(searchParams.get("productId"), 10); // Convert to number
@@ -42,7 +42,7 @@ const AddToCartButton = () => {
   const incrementQuantity = () => {
     const newQuantity = currentQuantity + 1;
     setQuantity(newQuantity); // Update quantity in state immediately
-    dispatch(addToCart({ quantity: newQuantity, product_id: productId }));
+    dispatch(addToCart({ quantity: newQuantity, product_id: productId,price}));
     debounceUpdateCart(newQuantity); // Debounced API call
   };
 
@@ -65,7 +65,7 @@ const AddToCartButton = () => {
 
   const handleAddToCart = (newQuantity) => {
     incrementQuantity();
-    addToCartAPI({ userId, productId, quantity: newQuantity })
+    addToCartAPI({ userId, productId, quantity: newQuantity,price })
       .unwrap()
       .catch((error) => console.error("Error occurred while adding to cart:", error));
   };
@@ -85,7 +85,7 @@ const AddToCartButton = () => {
           <button
             onClick={decrementQuantity}
             className="text-xl text-gray-500 border-r-2 px-3 py-2"
-            disabled={isUpdating}
+            // disabled={isUpdating}
           >
             -
           </button>
@@ -93,7 +93,7 @@ const AddToCartButton = () => {
           <button
             onClick={incrementQuantity}
             className="text-xl text-gray-500 border-l-2 px-3 py-2"
-            disabled={isUpdating}
+            // disabled={isUpdating}
           >
             +
           </button>
