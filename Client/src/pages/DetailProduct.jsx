@@ -44,7 +44,7 @@ const DetailProduct = () => {
               </h2>
               <p className="text-xl text-gray-600 my-3">{data.description}</p>
               <p className="text-2xl font-bold text-green-600 mb-4">
-                ${data.price}
+              ₹{data.price}
               </p>
               <p className="text-lg text-gray-600 mb-6">
                 Category: {data.category.name}

@@ -75,7 +75,7 @@ const ProductsPage = () => {
                   </div>
                   <p>{product.description}</p>
                   <p className="text-red-600 font-sans font-semibold text-xl">
-                    ${product.price}
+                  ₹{product.price}
                   </p>
 
                   <div className="items-center justify-center flex">

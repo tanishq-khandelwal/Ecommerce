@@ -86,7 +86,7 @@ const Cart = () => {
                     {item?.product?.description}
                   </p>
                   <p className="text-base font-medium text-gray-900 mt-2">
-                    Price: ${item?.product?.price}
+                    Price: ₹{item?.product?.price}
                   </p>
                 </div>
                 <div className="flex gap-4 items-center">
@@ -114,7 +114,7 @@ const Cart = () => {
 
         <div className="checkout-section mt-12 text-right">
           <div className="total-value text-lg font-medium text-gray-800 mb-4">
-            Total: ${totalValue.toFixed(2)}
+            Total: ₹{totalValue.toFixed(2)}
           </div>
           <button className="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-green-700 focus:outline-none">
             Proceed to Checkout

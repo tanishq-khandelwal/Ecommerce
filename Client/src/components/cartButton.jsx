@@ -46,8 +46,9 @@ const CartButton = ({ productId, refetchCart }) => {
       await updateCartAPI({ productId, userId, quantity: newQuantity });
     } else {
       setQuantity(0);
-      await removeCartAPI({ userId, productId });
       dispatch(removeFromCart({ quantity: 0, product_id: productId }));
+      await removeCartAPI({ userId, productId });
+      
     }
     refetchCart(); // Refresh cart data
   };
