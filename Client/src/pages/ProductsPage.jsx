@@ -9,6 +9,8 @@ import MenuSection from "../components/MenuSection";
 const ProductsPage = () => {
   const { data, error, isLoading } = useFetchProductsQuery();
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [displayedProducts, setDisplayedProducts] = useState([]);
+  const [itemsToShow, setItemsToShow] = useState(9); // Number of products to load initially
   const navigate = useNavigate();
 
   const handleProductClick = (product_id) => {
@@ -18,7 +20,6 @@ const ProductsPage = () => {
   const handleApplyFilters = (filters) => {
     if (!data) return;
 
-    // console.log("Applied filters are:", filters);
     const filtered = data.filter((product) => {
       const matchesCategory =
         !filters.category || product.category_id === Number(filters.category);
@@ -33,28 +34,47 @@ const ProductsPage = () => {
       return matchesCategory && matchesPrice && matchesRating;
     });
     setFilteredProducts(filtered);
+    setDisplayedProducts(filtered.slice(0, itemsToShow)); // Update displayed products
   };
 
-  // Set initial filteredProducts on page load if no filters are applied
   useEffect(() => {
     if (data) {
       setFilteredProducts(data);
+      setDisplayedProducts(data.slice(0, itemsToShow));
     }
   }, [data]);
 
-  console.log(filteredProducts);
+  const loadMoreProducts = () => {
+    const newItemsToShow = itemsToShow + 9; // Load 9 more items
+    setItemsToShow(newItemsToShow);
+    setDisplayedProducts(filteredProducts.slice(0, newItemsToShow));
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        loadMoreProducts();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [filteredProducts, itemsToShow]);
 
   return (
     <Layout>
-      <MenuSection/>
+      <MenuSection />
       <Filters onApplyFilters={handleApplyFilters} />
       <div className="py-16 px-10">
         {isLoading && <p>Loading...</p>}
         {error && <p className="text-red-500">Error: {error.message}</p>}
 
-        {filteredProducts.length > 0 ? (
+        {displayedProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
-            {filteredProducts.map((product) => (
+            {displayedProducts.map((product) => (
               <div
                 key={product.product_id}
                 className="bg-white p-1 border rounded-lg shadow-lg hover:shadow-2xl transition"
@@ -77,7 +97,7 @@ const ProductsPage = () => {
                   </div>
                   <p>{product.description}</p>
                   <p className="text-red-600 font-sans font-semibold text-xl">
-                  ₹{product.price}
+                    ₹{product.price}
                   </p>
 
                   <div className="items-center justify-center flex">
@@ -95,7 +115,7 @@ const ProductsPage = () => {
             ))}
           </div>
         ) : (
-          <p> </p>
+          <p>No products found</p>
         )}
       </div>
     </Layout>
@@ -103,3 +123,4 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+  

@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 jest.mock("../redux/slices/authSlice", () => ({
   useLoginMutation: jest.fn(),
-  setCredentials:jest.fn()
+  setCredentials: jest.fn()
 }));
 
 jest.mock("react-hot-toast", () => ({
@@ -39,11 +39,8 @@ describe("Login Component", () => {
     mockLogin = jest.fn();
     mockLogin.unwrap = jest
       .fn()
-      .mockRejectedValue({ data: { message: "Invalid credentials" } }); // Mock unwrap method
-    useLoginMutation.mockReturnValue([
-      mockLogin,
-      { isLoading: false, isError: false, error: null },
-    ]);
+      .mockRejectedValue({ data: { message: "Internal server error" } }); // Mock unwrap method
+    useLoginMutation.mockReturnValue([mockLogin, { isLoading: false, isError: false, error: null }]);
   });
 
   test("renders the Login form", () => {
@@ -110,10 +107,7 @@ describe("Login Component", () => {
   });
 
   test("Displays Loading text when the login request is being processed", async () => {
-    useLoginMutation.mockReturnValue([
-      mockLogin,
-      { isLoading: true, isError: false, error: null },
-    ]);
+    useLoginMutation.mockReturnValue([mockLogin, { isLoading: true, isError: false, error: null }]);
     render(
       <Provider store={store}>
         <MemoryRouter>
@@ -140,10 +134,7 @@ describe("Login Component", () => {
     const mockError = { data: { message: "Login failed. Please try again" } };
     const mockLogin = jest.fn().mockRejectedValue(mockError);
 
-    useLoginMutation.mockReturnValue([
-      mockLogin,
-      { isLoading: false, isError: true, error: mockError },
-    ]);
+    useLoginMutation.mockReturnValue([mockLogin, { isLoading: false, isError: true, error: mockError }]);
 
     render(
       <Provider store={store}>
@@ -163,23 +154,18 @@ describe("Login Component", () => {
 
     // Wait for the error toast to be called
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(
-        "Login failed. Please try again"
-      );
+      expect(toast.error).toHaveBeenCalledWith("Login failed. Please try again");
     });
   });
 
   test.skip("Should redirect to Dashboard on Successful Login", async () => {
     const mockResponse = { user: "testUser" };
-    useLoginMutation.mockReturnValue([
-      mockLogin,
-      { isLoading: false, isError: false, error: null },
-    ]);
+    useLoginMutation.mockReturnValue([mockLogin, { isLoading: false, isError: false, error: null }]);
     mockLogin.mockResolvedValue(mockResponse);
-  
+
     const mockNavigate = jest.fn();
     useNavigate.mockReturnValue(mockNavigate);
-  
+
     render(
       <Provider store={store}>
         <MemoryRouter>
@@ -187,23 +173,22 @@ describe("Login Component", () => {
         </MemoryRouter>
       </Provider>
     );
-  
+
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
     const loginButton = screen.getByRole("button", { name: /login/i });
-  
+
     fireEvent.change(emailInput, { target: { value: "test@gmail.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     fireEvent.click(loginButton);
-  
+
     // Debug Redux Dispatch
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({ email: "test@gmail.com", password: "password123" });
       expect(setCredentials).toHaveBeenCalledWith({ user: mockResponse });
       expect(mockNavigate).toHaveBeenCalledWith("/");
     });
-  
+
     screen.debug(); // Outputs the current DOM state
   });
-  
 });

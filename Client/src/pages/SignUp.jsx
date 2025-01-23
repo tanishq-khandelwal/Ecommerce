@@ -53,7 +53,7 @@ const Signup = () => {
           Sign Up
         </h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} role="form">
           {/* First Name */}
           <div className="flex gap-4">
             <div className="mb-4">
@@ -136,7 +136,7 @@ const Signup = () => {
           <div className="relative mb-4">
           <label
               className="block text-sm font-medium text-gray-600"
-              htmlFor="email"
+              htmlFor="password"
             >
               Password
             </label>
@@ -152,6 +152,7 @@ const Signup = () => {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 mt-4 "
+              data-testid="toggle-password-visibility"
             >
               {showPassword ? (
                 <img src={showpass} className="w-5 h-5" />
@@ -195,6 +196,7 @@ const Signup = () => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              data-testid="address"
               required
             />
           </div>
@@ -205,6 +207,7 @@ const Signup = () => {
               type="submit"
               className="w-auto px-8 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={isLoading}
+              data-testid="signup-button"
             >
               {isLoading ? "Signing Up..." : "Sign Up"}
             </button>
