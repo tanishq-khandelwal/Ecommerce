@@ -61,8 +61,14 @@ const Cart = () => {
     <Layout>
       <div className="py-16 px-10 bg-gray-100">
         <div className="cart-items max-w-5xl mx-auto">
-          {cartItems.length > 0 ? (
-            cartItems.map((item) => (
+        {cartItems.length > 0 ? (
+  cartItems
+    .filter((item) =>
+      cartDetails.some(
+        (detail) => detail.product_id === item?.product?.product_id
+      )
+    )
+    .map((item) =>(
               <div
                 key={item?.product.product_id}
                 className="cart-item flex justify-between py-6 px-4 bg-white shadow-lg rounded-lg mb-6 transition-transform transform hover:scale-105"
