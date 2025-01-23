@@ -4,6 +4,7 @@ import { useFetchProductsQuery } from "../services/products";
 import Filters from "../components/Filters";
 import { useNavigate } from "react-router-dom";
 import StarRating from "../components/StarRatings";
+import MenuSection from "../components/MenuSection";
 
 const ProductsPage = () => {
   const { data, error, isLoading } = useFetchProductsQuery();
@@ -45,6 +46,7 @@ const ProductsPage = () => {
 
   return (
     <Layout>
+      <MenuSection/>
       <Filters onApplyFilters={handleApplyFilters} />
       <div className="py-16 px-10">
         {isLoading && <p>Loading...</p>}

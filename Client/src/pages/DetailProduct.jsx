@@ -8,6 +8,7 @@ import deliverypng from "../assets/delivery.png";
 import AddToCartButton from "../components/AddToCartButton";
 import { useSelector } from "react-redux";
 import StarRating from "../components/StarRatings";
+import MenuSection from "../components/MenuSection";
 
 const DetailProduct = () => {
   const [searchParams] = useSearchParams();
@@ -22,6 +23,7 @@ const DetailProduct = () => {
 
   return (
     <Layout>
+      <MenuSection/>
       <div className="py-16 px-10">
         {isLoading && <p className="text-center text-lg">Loading....</p>}
         {error && <p className="text-red-500 text-center">{error.message}</p>}

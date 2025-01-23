@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const images = [
   "https://images-eu.ssl-images-amazon.com/images/G/31/img24/Wireless/akull/JanART25/PEA_Event/PC_Hero_3000x1200_Asin._CB552651757_.jpg",
@@ -16,6 +17,8 @@ const HeroSection = () => {
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
+
+  const navigate=useNavigate();
 
   return (
     <section
@@ -37,7 +40,9 @@ const HeroSection = () => {
           selected items.
         </p>
         <div className="flex gap-4">
-          <button className="px-8 py-3 bg-white text-[#1E4197] rounded-full text-lg">
+          <button className="px-8 py-3 bg-white text-[#1E4197] rounded-full text-lg" onClick={()=>{
+            navigate('/products')
+          }}>
             Shop Now
           </button>
           <button className="px-8 py-3 bg-[#1E4197] text-white rounded-full text-lg hover:bg-white hover:text-[#1E4197] border-2  border-[#1E4197]">

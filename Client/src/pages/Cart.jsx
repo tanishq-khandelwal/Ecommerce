@@ -7,6 +7,7 @@ import {
 import CartButton from "../components/cartButton.jsx";
 import { removeFromCart } from "../redux/slices/cartSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import MenuSection from "../components/MenuSection.jsx";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -59,6 +60,7 @@ const Cart = () => {
 
   return (
     <Layout>
+      <MenuSection/>
       <div className="py-16 px-10 bg-gray-100">
         <div className="cart-items max-w-5xl mx-auto">
         {cartItems.length > 0 ? (

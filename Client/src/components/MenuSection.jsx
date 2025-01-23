@@ -4,7 +4,7 @@ const MenuSection = () => {
       <div className="flex items-center space-x-4">
         {/* <img src="https://via.placeholder.com/150x50" alt="logo" className="w-32" /> */}
         <nav className="space-x-6 text-lg font-semibold">
-          <a href="#home" className="hover:text-[#c3c3c4]">
+          <a href="/" className="hover:text-[#c3c3c4]">
             Home
           </a>
 
