@@ -3,6 +3,7 @@ import Layout from "../Layout";
 import deliveryIcon from "../assets/delivery.png";
 import { useGetCartDetailsQuery } from "../services/cart";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const userId = localStorage.getItem("userId");
@@ -17,6 +18,8 @@ const Checkout = () => {
   const [totalValue, setTotalValue] = useState(0);
   const [tax, setTax] = useState(0);
   const [finalTotal, setFinalTotal] = useState(0);
+
+  const navigate=useNavigate('/success');
 
   useEffect(() => {
     if (Array.isArray(data)) {
@@ -171,7 +174,9 @@ const Checkout = () => {
           </div>
 
           <div className="mt-6 flex justify-center">
-            <button className="w-auto px-3 bg-blue-500 text-white py-3 rounded-md shadow-md">
+            <button className="w-auto px-3 bg-blue-500 text-white py-3 rounded-md shadow-md" onClick={()=>{
+              navigate('/success')
+            }}>
               Proceed to Pay
             </button>
           </div>

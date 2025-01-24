@@ -12,8 +12,8 @@ const ThankYouPage = () => {
 
   return (
     <Layout>
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:w-1/2 lg:w-1/3">
+    <div className="flex items-center justify-center min-h-screen ">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:w-1/2 lg:w-1/3 border ">
         <div className="text-center">
           <div className="flex justify-center mb-6">
             <FaCheckCircle className="text-green-500 text-6xl animate__animated animate__bounceIn" />
@@ -33,7 +33,7 @@ const ThankYouPage = () => {
               Go to Home
             </button>
             <button
-              onClick={() => window.location.reload()}
+              onClick={()=>{navigate('/myorders')}}
               className="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-400 transition duration-200 ease-in-out transform hover:scale-105"
             >
               View Order
