@@ -115,7 +115,7 @@ const ProductsPage = () => {
             ))}
           </div>
         ) : (
-          <p>No products found</p>
+          <p> </p>
         )}
       </div>
     </Layout>

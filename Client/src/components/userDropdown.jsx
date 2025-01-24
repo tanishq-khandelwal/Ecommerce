@@ -60,6 +60,16 @@ const UserDropdown = () => {
             </li>
             <li>
               <button
+                onClick={()=>{
+                  navigate('/myorders')
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+              >
+                My Orders
+              </button>
+              </li>
+            <li>
+              <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
               >

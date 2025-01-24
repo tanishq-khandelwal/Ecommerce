@@ -15,6 +15,7 @@ export const LOGIN = gql`
       password
       first_name
       last_name
+      address
       user_id
       phone
       role

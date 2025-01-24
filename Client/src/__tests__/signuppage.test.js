@@ -6,6 +6,21 @@ import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter as Router } from 'react-router-dom';
 // import '@testing-library/jest-dom';
 import toast from 'react-hot-toast';
+import { useSignupMutation } from '../redux/slices/authSlice';
+
+jest.mock("../redux/slices/authSlice",()=>({
+  useSignupMutation:jest.fn()
+}))
+
+// jest.mock('../redux/slices/authSlice', () => ({
+//   useSignupMutation: jest.fn(),
+// }));
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve({}),
+  })
+);
 
 const mockReducer = (state = {}, action) => state;
 
@@ -18,6 +33,11 @@ jest.mock("react-hot-toast",()=>({
     error:jest.fn(),
     loading:jest.fn(),
 }))
+
+
+
+
+
 
 describe('Signup Component', () => {
 
@@ -86,6 +106,19 @@ expect(addressInputs[0]).toBeInTheDocument(); // Verify it's in the document
   });
 
   it('should call handleSubmit on form submit', async () => {
+    jest.mock('../redux/slices/authSlice', () => ({
+      useSignupMutation: jest.fn(),
+    }));
+  
+    const mockSignupFn = jest.fn().mockResolvedValue({
+      data: { message: "User Registered Successfully!" },
+    });
+  
+    useSignupMutation.mockReturnValue([
+      mockSignupFn,
+      { isLoading: false, isError: false, error: null },
+    ]);
+  
     render(
       <Provider store={store}>
         <Router>
@@ -93,7 +126,7 @@ expect(addressInputs[0]).toBeInTheDocument(); // Verify it's in the document
         </Router>
       </Provider>
     );
-
+  
     fireEvent.change(screen.getByLabelText(/First Name/i), {
       target: { value: 'John' },
     });
@@ -112,14 +145,15 @@ expect(addressInputs[0]).toBeInTheDocument(); // Verify it's in the document
     fireEvent.change(screen.getByTestId("address"), {
       target: { value: '123 Main St' },
     });
-
-    fireEvent.submit(screen.getByRole('form'));
-
+  
+    fireEvent.click(screen.getByTestId("signup-button"));
+  
     await waitFor(() => {
-      // Check if toast success message is shown
-      expect(toast.success).toHaveBeenCalledWith("User Registered Successfully !")
+      expect(mockSignupFn).toHaveBeenCalled();
+      expect(toast.success).toHaveBeenCalledWith("User Registered Successfully !");
     });
   });
+  
 
 //   it('should disable submit button while loading', () => {
 //     render(

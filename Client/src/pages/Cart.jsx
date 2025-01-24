@@ -8,6 +8,7 @@ import CartButton from "../components/cartButton.jsx";
 import { removeFromCart } from "../redux/slices/cartSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import MenuSection from "../components/MenuSection.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const Cart = () => {
   const [quantities, setQuantities] = useState({});
   const { data, isLoading, error, refetch } = useGetCartDetailsQuery(userId);
   const [removeCartAPI] = useRemoveCartMutation();
+  const navigate=useNavigate();
 
   const cartItems = Array.isArray(data) ? data : [];
 
@@ -118,7 +120,9 @@ const Cart = () => {
           <div className="total-value text-lg font-medium text-gray-800 mb-4">
             Total: ₹{totalValue.toFixed(2)}
           </div>
-          <button className="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-green-700 focus:outline-none">
+          <button className="bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-green-700 focus:outline-none" onClick={()=>{
+            navigate('/checkout')
+          }}>
             Proceed to Checkout
           </button>
         </div>
