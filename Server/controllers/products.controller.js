@@ -1,26 +1,33 @@
-import { hasuraClient } from "../config/hasuraClient.js";
-
+import { apolloClient } from "../config/hasuraClient.js";
 import { GET_PRODUCTS, CREATE_PRODUCT } from "../queries/product.queries.js";
 
 export const fetchProducts = async (req, res) => {
   try {
-    const response = await hasuraClient.request(GET_PRODUCTS);
-    const p=response.products;
-    res.status(200).json(p)
+    const { data } = await apolloClient.query({
+      query: GET_PRODUCTS,
+    });
+    const products = data.products;
+    res.status(200).json(products);
 
-    console.log(p);
+    console.log(products);
   } catch (err) {
-    console.error("An Error Occured", err);
-
+    console.error("An Error Occurred", err);
     res.status(500).send("Internal Server Error");
   }
 };
 
 export const addProducts = async (req, res) => {
-  const { category_id, name, description, price, stock_quantity, image_url } =req.body;
+  const { category_id, name, description, price, stock_quantity, image_url } =
+    req.body;
 
-  if (!category_id || !name || !description || !price || !stock_quantity || !image_url)
-    {
+  if (
+    !category_id ||
+    !name ||
+    !description ||
+    !price ||
+    !stock_quantity ||
+    !image_url
+  ) {
     return res.status(400).json({
       message: "All fields are required",
     });
@@ -36,16 +43,18 @@ export const addProducts = async (req, res) => {
       image_url,
     };
 
-    const data = await hasuraClient.request(CREATE_PRODUCT, { product });
+    const { data } = await apolloClient.mutate({
+      mutation: CREATE_PRODUCT,
+      variables: { product },
+    });
 
     res.status(200).json({
-      success:true,
+      success: true,
       message: "Product Added Successfully",
       data,
     });
   } catch (err) {
-    console.error("An Error Occured", err);
-
+    console.error("An Error Occurred", err);
     res.status(500).send("Internal Server Error");
   }
 };

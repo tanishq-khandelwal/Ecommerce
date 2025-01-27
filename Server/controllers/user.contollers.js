@@ -1,26 +1,25 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { hasuraClient } from "../config/hasuraClient.js";
-import { CREATE_USER, LOGIN } from "../queries/user.queries.js";
+import { apolloClient } from "../config/hasuraClient.js"; // Import the Apollo Client
+import { CREATE_USER, LOGIN } from "../queries/user.queries.js"; // Keep your existing queries
 
 const cookieOptions = {
   secure: true,
-  sameSite: 'None',
+  sameSite: "None",
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   httpOnly: false,
 };
 
 const generateJWTToken = (userId, email) => {
   const payload = { userId, email };
-  const secret = process.env.JWT_SECRET; 
+  const secret = process.env.JWT_SECRET;
+
   const options = { expiresIn: "7d" };
   return jwt.sign(payload, secret, options);
 };
 
-const comparePassword = (plainText, password) => {
-  const result = bcrypt.compareSync(plainText, password);
-
-  return result;
+const comparePassword = async (plainText, password) => {
+  return await bcrypt.compare(plainText, password);
 };
 
 export const RegisterUser = async (req, res) => {
@@ -45,11 +44,14 @@ export const RegisterUser = async (req, res) => {
       password: hashedPassword,
     };
 
-    // Create user in Hasura
-    const response = await hasuraClient.request(CREATE_USER, { user });
+    // Use Apollo Client to create the user in Hasura
+    const response = await apolloClient.mutate({
+      mutation: CREATE_USER,
+      variables: { user },
+    });
 
-    // Extract user_id from the Hasura response
-    const userId = response.insert_users_one.user_id;
+    // Extract user_id from the response
+    const userId = response.data.insert_users_one.user_id;
 
     // Generate a JWT token
     const token = generateJWTToken(userId, email);
@@ -65,8 +67,8 @@ export const RegisterUser = async (req, res) => {
     console.error("An Error Occurred:", err);
 
     if (
-      err.response?.errors?.[0]?.extensions?.code === "constraint-violation" &&
-      err.response.errors[0]?.message.includes("unique constraint")
+      err.graphQLErrors?.[0]?.extensions?.code === "constraint-violation" &&
+      err.graphQLErrors[0]?.message.includes("unique constraint")
     ) {
       return res.status(500).json({
         message: "Email already exists. Please use a different email.",
@@ -82,7 +84,6 @@ export const RegisterUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(req.body);
   if (!email || !password) {
     return res.status(400).json({
       message: "All Fields are Required",
@@ -90,44 +91,41 @@ export const loginUser = async (req, res) => {
   }
 
   try {
-    // Fetch user from the database
-    const response = await hasuraClient.request(LOGIN, { email });
+    // Fetch user from the database using Apollo Client
+    const response = await apolloClient.query({
+      query: LOGIN,
+      variables: { email },
+    });
 
-    if (!response.users || response.users.length === 0) {
-      console.log('No user found with this email');
+    if (!response.data.users || response.data.users.length === 0) {
+      console.log("No user found with this email");
       return res.status(404).json({
         message: "User not found",
-        
       });
     }
 
-    const Orgpassword = response.users[0].password;
+    const Orgpassword = response.data.users[0].password;
 
     if (!Orgpassword) {
-      console.log('Password not found');
+      console.log("Password not found");
       return res.status(404).json({
         message: "Password not found",
       });
     }
 
-    console.log('Fetched password:', Orgpassword);
-
-    if (comparePassword(password, Orgpassword)) {
-      console.log('Passwords Matched');
-
-      const token = generateJWTToken(response.users[0].user_id, email);
+    if (await comparePassword(password, Orgpassword)) {
+      const token = generateJWTToken(response.data.users[0].user_id, email);
       res.cookie("auth_token", token, cookieOptions);
 
-
-      const userwithoutpassword={...response.users[0]};
-      delete userwithoutpassword.password;
+      const userWithoutPassword = { ...response.data.users[0] };
+      delete userWithoutPassword.password;
 
       return res.status(200).json({
         message: "Login successful",
-        data:userwithoutpassword
+        data: userWithoutPassword,
       });
     } else {
-      console.log('Wrong Password');
+      console.log("Wrong Password");
       return res.status(400).json({
         message: "Incorrect password",
       });
@@ -140,14 +138,12 @@ export const loginUser = async (req, res) => {
   }
 };
 
-
 export const logoutUser = async (_req, res, _next) => {
   res.cookie("auth_token", null, {
     secure: true,
     maxAge: 0,
     httpOnly: true,
   });
-
 
   res.status(200).json({
     success: true,

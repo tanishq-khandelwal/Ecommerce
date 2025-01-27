@@ -1,4 +1,5 @@
-import { gql } from "graphql-request";
+import pkg from "@apollo/client";
+const { gql } = pkg;
 
 export const GET_PRODUCTS = gql`
   query GetProducts {

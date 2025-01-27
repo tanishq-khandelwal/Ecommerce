@@ -1,5 +1,8 @@
-import { gql } from "graphql-request";
+import pkg from '@apollo/client';
+const { gql } = pkg;
 
+
+// Create User Mutation
 export const CREATE_USER = gql`
   mutation SignUp($user: users_insert_input!) {
     insert_users_one(object: $user) {
@@ -9,6 +12,7 @@ export const CREATE_USER = gql`
   }
 `;
 
+// Login Query
 export const LOGIN = gql`
   query MyQuery($email: String!) {
     users(where: { email: { _eq: $email } }) {
@@ -24,8 +28,8 @@ export const LOGIN = gql`
         quantity
         product_id
         product {
-        price
-      }
+          price
+        }
       }
     }
   }

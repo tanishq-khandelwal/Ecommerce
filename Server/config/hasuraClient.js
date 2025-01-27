@@ -1,13 +1,20 @@
-import { GraphQLClient } from "graphql-request";
-import dotenv from "dotenv";
+import pkg from '@apollo/client';
+const { ApolloClient, InMemoryCache, HttpLink } = pkg;
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-const HASURA_GRAPHQL_URL = process.env.HASURA_GRAPHQL_URL; // Hasura endpoint
-const HASURA_ADMIN_SECRET = process.env.HASURA_ADMIN_SECRET; // Admin secret if enabled
+const HASURA_GRAPHQL_URL = process.env.HASURA_GRAPHQL_URL;
+const HASURA_ADMIN_SECRET = process.env.HASURA_ADMIN_SECRET;
 
-export const hasuraClient = new GraphQLClient(HASURA_GRAPHQL_URL, {
+const httpLink = new HttpLink({
+  uri: HASURA_GRAPHQL_URL,
   headers: {
     "x-hasura-admin-secret": HASURA_ADMIN_SECRET,
   },
+});
+
+export const apolloClient = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
 });
