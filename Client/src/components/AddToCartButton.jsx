@@ -63,9 +63,10 @@ const AddToCartButton = ({price}) => {
     }
   };
 
-  const handleAddToCart = (newQuantity) => {
-    incrementQuantity();
-    addToCartAPI({ userId, productId, quantity: newQuantity,price })
+  const handleAddToCart = () => {
+    setQuantity(1); // Update quantity in state immediately
+    dispatch(addToCart({ quantity: 1, product_id: productId,price}));
+    addToCartAPI({ userId, productId, quantity: 1,price })
       .unwrap()
       .catch((error) => console.error("Error occurred while adding to cart:", error));
   };

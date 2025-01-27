@@ -88,6 +88,22 @@ export const CartAPI = createApi({
         }),
       }),
     }),
+
+    clearCart:builder.mutation({
+      query:(userId)=>({
+        method:"POST",
+        body:JSON.stringify({
+          query:`
+          mutation update_cart($Id:Int!) {
+            delete_cart(where: {user_id: {_eq: $Id}}) {
+              affected_rows
+            }
+          }
+          `,
+          variables:{Id:userId}
+        })
+      })
+    })
   }),
 });
 
@@ -96,4 +112,5 @@ export const {
   useAddToCartMutation,
   useUpdateCartMutation,
   useRemoveCartMutation,
+  useClearCartMutation
 } = CartAPI;

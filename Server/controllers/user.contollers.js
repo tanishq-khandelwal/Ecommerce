@@ -120,10 +120,13 @@ export const loginUser = async (req, res) => {
       const userWithoutPassword = { ...response.data.users[0] };
       delete userWithoutPassword.password;
 
+      console.log(userWithoutPassword);
       return res.status(200).json({
         message: "Login successful",
         data: userWithoutPassword,
       });
+
+      
     } else {
       console.log("Wrong Password");
       return res.status(400).json({

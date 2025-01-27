@@ -71,7 +71,8 @@ const cartSlice = createSlice({
       saveCartToLocalStorage(state.cartDetails);
     },
     clearCart: (state) => {
-      state.cartDetails = []; // Reset cart state
+      state.cartDetails = [];
+      saveCartToLocalStorage(state.cartDetails); // Reset cart state
     },
   },
 });

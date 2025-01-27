@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../Layout";
-import { useGetCartDetailsQuery } from "../services/cart";
-import { useSelector } from "react-redux";
+import { useClearCartMutation, useGetCartDetailsQuery } from "../services/cart";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUpdateOrdersMutation } from "../services/orders";
 import toast from "react-hot-toast";
+import { clearCart } from "../redux/slices/cartSlice";
 
 const Checkout = () => {
   const userId = localStorage.getItem("userId");
+  const dispatch=useDispatch();
   const { data, isLoading, error } = useGetCartDetailsQuery(userId);
   const firstName = useSelector((state) => state.auth.user.data.first_name);
   const last_name = useSelector((state) => state.auth.user.data.last_name);
@@ -26,6 +28,8 @@ const Checkout = () => {
     setPaymentMethod(e.target.value);
   };
 
+
+  console.log(data);
   useEffect(() => {
     if (Array.isArray(data)) {
       setCartItems(data);
@@ -52,7 +56,7 @@ const Checkout = () => {
   const formattedDate = `${day} ${today.toLocaleString("en-GB", options)}`;
 
   const [updateOrders, { isError, error: updateError }] = useUpdateOrdersMutation();
-
+  const [clearCartAPI]=useClearCartMutation();
   const orders = {
     userId: userId,
     totalPrice: finalTotal,
@@ -77,6 +81,8 @@ const Checkout = () => {
 
     try {
       const response = await updateOrders(orders).unwrap();
+      await clearCartAPI(userId).unwrap();
+      dispatch(clearCart())
       console.log("Order Placed", response);
 
       // Show success toast and navigate to the success page

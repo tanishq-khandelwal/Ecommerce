@@ -33,6 +33,17 @@ const MyOrders = () => {
     );
   }
 
+  function convertToNormalDate(isoDate) {
+    const date = new Date(isoDate);
+
+    // Format day, month, and year
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" }); // Get short month name (e.g., "Jan")
+    const year = date.getFullYear();
+
+    return `${day} ${month} ${year}`;
+  }
+
   return (
     <Layout>
       {/* <div className="text-2xl font-semibold text-center mb-8">My Orders</div> */}
@@ -43,10 +54,18 @@ const MyOrders = () => {
             className="bg-white border p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
           >
             <div className="mb-4 flex gap-6 justify-start items-center">
-              <div className="text-lg font-bold">Order ID: {order.order_id}</div>
-              <div className="text-sm text-gray-500">Order Date: {order.order_date}</div>
-              <div className="text-sm text-green-600">Estimated Delivery: {order.estimated_delivery}</div>
-              <div className="text-sm text-grey-500">Status: {order.status}</div>
+              <div className="text-lg font-bold">
+                Order ID: {order.order_id}
+              </div>
+              <div className="text-sm text-gray-500">
+                Order Date: {convertToNormalDate(order.order_date)}
+              </div>
+              <div className="text-sm text-green-600">
+                Estimated Delivery: {order.estimated_delivery}
+              </div>
+              <div className="text-sm text-grey-500">
+                Status: {order.status}
+              </div>
             </div>
 
             <div className="mb-4">
@@ -68,9 +87,14 @@ const MyOrders = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold font-sans"> ₹{item.product.price}</div>
+                      <div className="font-bold font-sans">
+                        {" "}
+                        ₹{item.product.price}
+                      </div>
                       {/* <div className="font-bold">₹{item.quantity * item.product.price}</div> */}
-                      <div className="font-medium text-gray-500">Qty;{item.quantity}</div>
+                      <div className="font-medium text-gray-500">
+                        Qty;{item.quantity}
+                      </div>
                     </div>
                   </li>
                 ))}
@@ -78,7 +102,7 @@ const MyOrders = () => {
             </div>
 
             <div className="flex justify-between text-sm text-gray-600">
-                <div>Order Details</div>
+              <div>Order Details</div>
               <div>
                 <div>Payment Method: {order.payments[0].payment_method}</div>
               </div>
