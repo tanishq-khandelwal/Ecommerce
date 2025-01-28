@@ -26,7 +26,7 @@ export const OrdersAPI = createApi({
                                 status: $status, 
                                 order_items: { data: $orderItems }, 
                                 payments: { data: $payments },
-                                shippings: {data: {shipping_address: $address, estimated_delivery_date: $date}}
+                                shippings: {data: {shipping_details: $address, estimated_delivery_date: $date}}
                             }) {
                                 affected_rows
                             }
@@ -74,7 +74,7 @@ export const OrdersAPI = createApi({
                         }
                         shippings {
                           estimated_delivery_date
-                          shipping_address
+                          shipping_details
                           shipping_status
                         }
                     }

@@ -99,18 +99,29 @@ const MyOrders = () => {
             </div>
 
             <div className="flex justify-between text-sm text-gray-600">
-            <div>
-              <div>Order Details:</div>
-              <div className="">
-                <div>Delivery Address: {order?.shippings[0]?.shipping_address}</div>
-                <div>Contact Details:</div>
-                <div>Estimate Delivery Date:  {order?.shippings[0]?.estimated_delivery_date}</div>
-              </div>
+              <div>
+                <div>Order Details:</div>
+                <div className="">
+                  <div>
+                    {order?.shippings[0]?.shipping_details
+                      ? order?.shippings[0]?.shipping_details
+                          .split(",")
+                          .map((item, index) => (
+                            <div key={index}>{item.trim()}</div>
+                          ))
+                      : null}
+                  </div>
+                  {/* <div>Contact Details:</div> */}
+                </div>
               </div>
               <div>
                 <div>Payment Method: {order.payments[0].payment_method}</div>
               </div>
-              
+
+              <div>
+                Estimate Delivery:{" "}
+                {order?.shippings[0]?.estimated_delivery_date}
+              </div>
             </div>
           </div>
         ))}

@@ -16,6 +16,8 @@ const Checkout = () => {
   const phone = useSelector((state) => state.auth.user.data.phone);
   const address = useSelector((state) => state.auth.user.data.address);
 
+  const deliveryDetails=firstName+' '+last_name+' , '+phone+' , '+address;
+  // console.log(deliveryDetails)
   const [cartItems, setCartItems] = useState([]);
   const [totalValue, setTotalValue] = useState(0);
   const [tax, setTax] = useState(0);
@@ -96,7 +98,7 @@ const formattedFutureDate = futureDate.toLocaleString('en-US', op).replace(',', 
         payment_status: "completed",
       },
     ],
-    address:address,
+    address:deliveryDetails,
     date:formattedFutureDate,
   };
 
