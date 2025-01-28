@@ -57,6 +57,29 @@ const Checkout = () => {
 
   const [updateOrders, { isError, error: updateError }] = useUpdateOrdersMutation();
   const [clearCartAPI]=useClearCartMutation();
+  const currentDate = new Date();
+
+// Add 3 days to the current date
+const futureDate = new Date(today);
+futureDate.setDate(today.getDate() + 3);
+
+// Format the date without timezone
+const op = {
+  weekday: 'short', // Short weekday (e.g., Fri)
+  year: 'numeric',  // Full year (e.g., 2025)
+  month: 'short',   // Short month (e.g., Jan)
+  day: '2-digit',   // 2-digit day (e.g., 31)
+  hour: '2-digit',  // 2-digit hour (e.g., 11)
+  minute: '2-digit', // 2-digit minute (e.g., 55)
+  second: '2-digit', // 2-digit second (e.g., 17)
+  hour12: false,    // Use 24-hour format
+};
+
+// Convert to desired format
+const formattedFutureDate = futureDate.toLocaleString('en-US', op).replace(',', '');
+
+// console.log(formattedFutureDate);
+
   const orders = {
     userId: userId,
     totalPrice: finalTotal,
@@ -73,6 +96,8 @@ const Checkout = () => {
         payment_status: "completed",
       },
     ],
+    address:address,
+    date:formattedFutureDate,
   };
 
   const handleOrders = async () => {

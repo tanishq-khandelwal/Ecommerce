@@ -15,17 +15,18 @@ export const OrdersAPI = createApi({
   }),
   endpoints: (builder) => ({
     updateOrders: builder.mutation({
-      query: ({ userId, totalPrice, status, orderItems, payments }) => ({
+      query: ({ userId, totalPrice, status, orderItems, payments,address,date }) => ({
         method: "POST",
         body: JSON.stringify({
           query: `
-                        mutation insertIntoOrders($userId: Int!, $totalPrice: numeric!, $status: String!, $orderItems: [order_items_insert_input!]!, $payments: [payments_insert_input!]!) {
+                        mutation insertIntoOrders($userId: Int!, $totalPrice: numeric!, $status: String!, $orderItems: [order_items_insert_input!]!, $payments: [payments_insert_input!]!,$address:String!,$date:date!) {
                             insert_orders(objects: {
                                 user_id: $userId, 
                                 total_price: $totalPrice, 
                                 status: $status, 
                                 order_items: { data: $orderItems }, 
-                                payments: { data: $payments }
+                                payments: { data: $payments },
+                                shippings: {data: {shipping_address: $address, estimated_delivery_date: $date}}
                             }) {
                                 affected_rows
                             }
@@ -37,6 +38,8 @@ export const OrdersAPI = createApi({
             status,
             orderItems: Array.isArray(orderItems) ? orderItems : [orderItems], // Ensure array format
             payments: Array.isArray(payments) ? payments : [payments], // Ensure array format
+            address,
+            date
           },
         }),
       }),
@@ -68,6 +71,11 @@ export const OrdersAPI = createApi({
                                 description
                             }
                         quantity
+                        }
+                        shippings {
+                          estimated_delivery_date
+                          shipping_address
+                          shipping_status
                         }
                     }
                 }

@@ -60,9 +60,6 @@ const MyOrders = () => {
               <div className="text-sm text-gray-500">
                 Order Date: {convertToNormalDate(order.order_date)}
               </div>
-              <div className="text-sm text-green-600">
-                Estimated Delivery: {order.estimated_delivery}
-              </div>
               <div className="text-sm text-grey-500">
                 Status: {order.status}
               </div>
@@ -102,15 +99,18 @@ const MyOrders = () => {
             </div>
 
             <div className="flex justify-between text-sm text-gray-600">
-              <div>Order Details</div>
+            <div>
+              <div>Order Details:</div>
+              <div className="">
+                <div>Delivery Address: {order?.shippings[0]?.shipping_address}</div>
+                <div>Contact Details:</div>
+                <div>Estimate Delivery Date:  {order?.shippings[0]?.estimated_delivery_date}</div>
+              </div>
+              </div>
               <div>
                 <div>Payment Method: {order.payments[0].payment_method}</div>
               </div>
-              <div className="text-right">
-                <div>Delivery Address:</div>
-                <div>{order.delivery_address}</div>
-                <div>{order.delivery_contact}</div>
-              </div>
+              
             </div>
           </div>
         ))}
