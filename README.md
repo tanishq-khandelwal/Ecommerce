@@ -5,7 +5,7 @@ This is a full-stack Ecommerce application built using modern web technologies. 
 
 ## Tech Stack
 - **Frontend:** React, Redux Saga, ShadCN
-- **Backend:** Hasura (GraphQL), Express (if applicable)
+- **Backend:** Hasura (GraphQL), Express
 - **Database:** SQL (PostgreSQL/MySQL)
 - **State Management:** Redux Saga
 - **Testing:** Jest
