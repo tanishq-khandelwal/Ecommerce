@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "ngrok": "^5.0.0-beta.2",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "react": "^19.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
