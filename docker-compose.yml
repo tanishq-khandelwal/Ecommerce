@@ -7,7 +7,7 @@ services:
     restart: always
     container_name: hasura
     environment:
-      HASURA_GRAPHQL_DATABASE_URL: postgresql://ecomm_owner:aMnyAL4uC9Tk@ep-cool-shape-a8r5001u.eastus2.azure.neon.tech/ecomm?sslmode=require
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
-      HASURA_GRAPHQL_DEV_MODE: "true"
-      HASURA_GRAPHQL_ADMIN_SECRET: Tsk_2003
+      HASURA_GRAPHQL_DATABASE_URL: 
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 
+      HASURA_GRAPHQL_DEV_MODE: 
+      HASURA_GRAPHQL_ADMIN_SECRET:
