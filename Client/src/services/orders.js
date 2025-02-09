@@ -9,7 +9,7 @@ export const OrdersAPI = createApi({
     baseUrl: url,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
-      headers.set("x-hasura-admin-secret", "Tsk_2003");
+      headers.set("x-hasura-admin-secret", "hXdjLBZXNehHLMOdk0OMAdRk7EjMl35iyZlYemXhGRe425x54e4oLuQbFinvSy27");
       return headers;
     },
   }),
